@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WebGL GPU Particles 2!</title>
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+    <div id="webgl-container" class="gradient-bg-darkgray-black">
+        <canvas id="webgl-canvas"></canvas>
+    </div>
+</body>
+
+<script type="text/javascript" src="js/lib/dat.gui.min.js"></script>
+<script type="text/javascript" src="js/lib/three.js"></script>
+<script type="text/javascript" src="js/lib/Stats.js"></script>
+<script type="text/javascript" src="js/lib/Clock.js"></script>
+<script type="text/javascript" src="js/lib/TrackballControls.js"></script>
+<script type="text/javascript" src="js/src/RenderContext.js"></script>
+<script type="text/javascript" src="js/src/App.js"></script>
+<script type="text/javascript" src="js/src/utils/UpdateLoop.js"></script>
+
+<script>
+// Run App inside closure
+// (function(){
+//     var app = new App();
+// })();
+
+// Run App in global
+var app = new App();
+</script>
+
+</html>
