@@ -117,6 +117,10 @@ var RenderContext = function(canvas) {
         _camera.position.z = 10;
     };
 
+    this.getRenderer = function() {
+        return _renderer;
+    };
+
 };
 
 RenderContext.prototype.constructor = RenderContext;
