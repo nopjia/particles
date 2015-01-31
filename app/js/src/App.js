@@ -1,37 +1,39 @@
+"use strict";
+
 var App = function() {
 
     var _this = this;
 
-    // FUNCTIONS
+    // EVENTS
 
-    this.onWindowResize = function() {
-        _this.graphics.setSize(window.innerWidth, window.innerHeight);
+    var _onWindowResize = function() {
+        _this.renderer.setSize(window.innerWidth, window.innerHeight);
     };
 
-    this.frameUpdate = function(dt, t) {
+    var _onFrameUpdate = function(dt, t) {
         _this.stats.begin();
-        _this.graphics.update(dt);
+        _this.renderer.update(dt);
         _this.stats.end();
     };
 
-    this.fixedUpdate = function(dt, t) {
+    var _onFixedUpdate = function(dt, t) {
 
     };
 
     // RUN
 
-    window.addEventListener("resize", _this.onWindowResize, false);
+    window.addEventListener("resize", _onWindowResize, false);
 
-    this.container = document.querySelector("#webgl-canvas");
-    this.graphics = new RenderContext(this.container);
-    this.graphics.init();
+    this.canvas = document.querySelector("#webgl-canvas");
+    this.renderer = new RenderContext(this.canvas);
+    this.renderer.init();
 
     this.stats = new Stats();
     document.body.appendChild(this.stats.domElement);
 
     this.updateLoop = new UpdateLoop();
-    this.updateLoop.frameCallback = this.frameUpdate;
-    this.updateLoop.fixedCallback = this.fixedUpdate;
+    this.updateLoop.frameCallback = _onFrameUpdate;
+    this.updateLoop.fixedCallback = _onFixedUpdate;
     this.updateLoop.start();
 
 };
