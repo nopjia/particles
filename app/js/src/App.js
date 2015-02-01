@@ -7,7 +7,7 @@ var App = function() {
     var _renderer;
     var _sim, _simMat, _initMat, _drawMat;
 
-    var _SIM_SIZE = 256;
+    var _SIM_SIZE = 512;
 
     // EVENTS
 
