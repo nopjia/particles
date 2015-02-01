@@ -45,6 +45,7 @@ var RenderContext = function(canvas) {
     var _initRenderer = function() {
         _renderer = new THREE.WebGLRenderer(_rendererParams);
         _renderer.setSize(_w, _h);
+        _renderer.setClearColor(0x808080, 1);
         _renderer.autoClear = _rendererParams.autoClear;
         _renderer.sortObjects = _rendererParams.sortObjects;
         _renderer.shadowMapEnabled = _rendererParams.shadowMapEnabled;

@@ -1,9 +1,13 @@
-var ShaderPass = function(shader) {
-    this.material = new THREE.ShaderMaterial({
+var createShaderMaterial = function(shader) {
+    return new THREE.ShaderMaterial({
         uniforms: THREE.UniformsUtils.clone(shader.uniforms),
         vertexShader: shader.vertexShader,
         fragmentShader: shader.fragmentShader
     });
+};
+
+var ShaderPass = function(shader) {
+    this.material = createShaderMaterial(shader);
 
     this.material.blending = THREE.NoBlending;
     this.material.depthWrite = false;
