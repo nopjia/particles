@@ -30,6 +30,19 @@ var PhysicsRenderer = function(renderer, shader, size) {
         }
     };
 
+    var _createTarget = function(s) {
+        var target = new THREE.WebGLRenderTarget(s, s, {
+            minFilter: THREE.NearestFilter,
+            magFilter: THREE.NearestFilter,
+            format: THREE.RGBAFormat,
+            type: THREE.FloatType,
+            depthBuffer: false,
+            stencilBuffer: false
+        });
+        target.generateMipmaps = false;
+        return target;
+    };
+
     var _updateRegisteredUniforms = function() {
         for (var i=0; i<_registeredUniforms.length; i++) {
             _registeredUniforms[i].value = _outTargetPtr;
@@ -96,17 +109,14 @@ var PhysicsRenderer = function(renderer, shader, size) {
 
     // init targets
 
-    _target1 = new THREE.WebGLRenderTarget(_size, _size, {
-        minFilter: THREE.NearestFilter,
-        magFilter: THREE.NearestFilter,
-        format: THREE.RGBAFormat,
-        type: THREE.FloatType,
-        depthBuffer: false,
-        stencilBuffer: false
-    });
-    _target1.generateMipmaps = false;
-    _target2 = _target1.clone();
-    _target3 = _target1.clone();
+    _target1 = _createTarget(_size);
+    _target2 = _createTarget(_size);
+    _target3 = _createTarget(_size);
+
+    // TODO_NOP
+    _target1.name = "PhysicsRenderer._target1";
+    _target2.name = "PhysicsRenderer._target2";
+    _target3.name = "PhysicsRenderer._target3";
 
     _currUpdateTarget = 1;
     _outTargetPtr = _target1;
@@ -115,10 +125,10 @@ var PhysicsRenderer = function(renderer, shader, size) {
 
     _simPass = new ShaderPass(shader);
     _resetPass = new ShaderPass(PassShader);
-    _debugPass = new ShaderPass(SimDebugShader);
-    _debugPass.material.uniforms.tTarget1.value = _target1;
-    _debugPass.material.uniforms.tTarget2.value = _target2;
-    _debugPass.material.uniforms.tTarget3.value = _target3;
+    // _debugPass = new ShaderPass(SimDebugShader);
+    // _debugPass.material.uniforms.tTarget1.value = _target1;
+    // _debugPass.material.uniforms.tTarget2.value = _target2;
+    // _debugPass.material.uniforms.tTarget3.value = _target3;
 
     this.reset();   // reset targets
 

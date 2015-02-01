@@ -33,6 +33,7 @@ var SimShader = {
             "vec3 currPos = texture2D(tCurr, vUv).rgb;",
             "vec3 vel = vec3(0.0, sin(10.0*uTime)*2.0, 0.0);",
             "currPos += vel * uDeltaT;",
+            // "currPos.y += 0.1;",
             "gl_FragColor = vec4(currPos, 1.0);",
         "}",
     ].join("\n")

@@ -6,18 +6,23 @@ var ParticleShader = {
     },
 
     vertexShader: [
-        "uniform sampler2D tPos;",
+        //"uniform sampler2D tPos;",
+        "varying vec3 vPos;",
         "void main() {",
-            "vec4 pos = texture2D(tPos, position.xy);",
-            "gl_PointSize = 3.0;",
-            "gl_Position = projectionMatrix * modelViewMatrix * vec4( pos.xyz, 1.0 );",
+            "vPos = position;",
+            // "vec3 pos = texture2D(tPos, position.xy).xyz;",
+            "gl_PointSize = 5.0;",
+            "gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );",
         "}"
     ].join("\n"),
 
     fragmentShader: [
+        "uniform sampler2D tPos;",
         "uniform vec4 uColor;",
+        "varying vec3 vPos;",
         "void main() {",
-            "gl_FragColor = uColor;",
+            "gl_FragColor = uColor * texture2D(tPos, vPos.xy);",
+            // "gl_FragColor = vec4(vPos.x, vPos.y, 0.0, 1.0);",
         "}",
     ].join("\n")
 
