@@ -1,4 +1,4 @@
-var PhysicsRenderer = function(renderer, simShader, initShader, size) {
+var PhysicsRenderer = function(renderer, simMat, initMat, size) {
 
     // PRIVATE VARS
 
@@ -93,10 +93,6 @@ var PhysicsRenderer = function(renderer, simShader, initShader, size) {
         uniform.value = _outTargetPtr;
     };
 
-    this.getUniforms = function() {
-        return _simPass.material.uniforms;
-    };
-
     this.reset = function() {
         _initPass.render(_renderer, _target1);
         _initPass.render(_renderer, _target2);
@@ -122,8 +118,8 @@ var PhysicsRenderer = function(renderer, simShader, initShader, size) {
 
     // init shader pass
 
-    _simPass = new ShaderPass(simShader);
-    _initPass = new ShaderPass(initShader);
+    _simPass = new ShaderPass(simMat);
+    _initPass = new ShaderPass(initMat);
     // _debugPass = new ShaderPass(SimDebugShader);
     // _debugPass.material.uniforms.tTarget1.value = _target1;
     // _debugPass.material.uniforms.tTarget2.value = _target2;
