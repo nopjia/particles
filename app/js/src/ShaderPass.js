@@ -1,5 +1,3 @@
-"use strict";
-
 var ShaderPass = function(shader) {
     this.material = new THREE.ShaderMaterial({
         uniforms: THREE.UniformsUtils.clone(shader.uniforms),
@@ -28,4 +26,4 @@ var ShaderPass = function(shader) {
 
 ShaderPass.prototype.render = function(renderer, writeBuffer) {
     renderer.render(this.scene, this.camera, writeBuffer);
-}
+};

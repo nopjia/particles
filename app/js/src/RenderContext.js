@@ -1,5 +1,3 @@
-"use strict";
-
 var RenderContext = function(canvas) {
 
     // PRIVATE VARS
@@ -119,6 +117,14 @@ var RenderContext = function(canvas) {
 
     this.getRenderer = function() {
         return _renderer;
+    };
+
+    this.getScene = function() {
+        return _scene;
+    };
+
+    this.getCamera = function() {
+        return _camera;
     };
 
 };
