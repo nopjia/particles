@@ -1,3 +1,5 @@
+#define M_PI 3.1415926535897932
+
 varying vec3 vPos;
 
 uniform vec4 uColor;
@@ -12,9 +14,8 @@ void main() {
 
     // calc alpha
 
-    float alpha = 4.0 *
-        (gl_PointCoord.x < 0.5 ? gl_PointCoord.x : 1.0-gl_PointCoord.x) *
-        (gl_PointCoord.y < 0.5 ? gl_PointCoord.y : 1.0-gl_PointCoord.y);
+    vec2 tmpCoord = 0.5 * cos(2.0*M_PI*gl_PointCoord+M_PI) + 0.5;
+    float alpha = tmpCoord.x * tmpCoord.y;
 
     gl_FragColor = uColor * vec4(color, alpha);
 }
