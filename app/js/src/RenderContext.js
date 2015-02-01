@@ -18,11 +18,10 @@ var RenderContext = function(canvas) {
 
     var _rendererParams = {
         canvas: _canvas,
-        devicePixelRatio: 1,
         alpha: false,
-        stencil: false,
         depth: true,
-        antialias: true,
+        stencil: false,
+        antialias: false,
         premultipliedAlpha: true,
         preserveDrawingBuffer: false,
         logarithmicDepthBuffer: false,
@@ -99,7 +98,7 @@ var RenderContext = function(canvas) {
     };
 
     this.update = function(dt) {
-        _renderer.clear();
+        _renderer.clearTarget(null);
 
         for (var i=0; i<_updateFuncs.length; i++)
             _updateFuncs[i](dt);

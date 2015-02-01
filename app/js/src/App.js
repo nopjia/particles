@@ -2,13 +2,9 @@ var App = function() {
 
     var _this = this;
 
-    var _renderer, _stats, _canvas, _updateLoop;
+    var _renderer, _stats, _canvas, _updateLoop, _sim, _particles;
 
-    var _SIM_SIZE = 16;
-
-    var _sim;
-
-    var _copyPass;
+    var _SIM_SIZE = 128;
 
     // EVENTS
 
@@ -19,13 +15,11 @@ var App = function() {
     var _onFrameUpdate = function(dt, t) {
         _stats.begin();
         _renderer.update(dt);
-        // _copyPass.render(_renderer.getRenderer());
-        // _sim.update(dt, t);
         _stats.end();
     };
 
     var _onFixedUpdate = function(dt, t) {
-        // _sim.update(dt, t);
+        _sim.update(dt, t);
     };
 
     // PRIVATE FUNCTIONS
@@ -51,36 +45,33 @@ var App = function() {
         var pos = new Float32Array(size*size*ATTR_WIDTH);
         for (var x=0; x<size; x++)
         for (var y=0; y<size; y++) {
-            var idx = x*ATTR_WIDTH + y*size*ATTR_WIDTH;
-            pos[idx]   = (x+0.5)/size;  // +0.5 to be at center of texel
-            pos[idx+1] = (y+0.5)/size;
-            pos[idx+2] = 0.0;   // TODO_NOP unused
+            var idx = x + y*size;
+            pos[ATTR_WIDTH*idx]   = (x+0.5)/size;   // +0.5 to be at center of texel
+            pos[ATTR_WIDTH*idx+1] = (y+0.5)/size;
+            pos[ATTR_WIDTH*idx+2] = idx/(size*size);       // extra: normalized id
         }
         geo.addAttribute("position", new THREE.BufferAttribute(pos, ATTR_WIDTH));
         return geo;
     };
 
-    var _geo, _mat, _particles;
-
-    var _customInit = function() {
+    var _sceneInit = function() {
         _sim = new PhysicsRenderer(
             _renderer.getRenderer(),
             SimShader,
             _SIM_SIZE
         );
-        window.sim = _sim;
 
-        _geo = _createParticleGeometry(_SIM_SIZE);
-        _mat = createShaderMaterial(ParticleShader);
-        _particles = new THREE.PointCloud(_geo, _mat);
+        var geo = _createParticleGeometry(_SIM_SIZE);
+        var mat = createShaderMaterial(ParticleShader);
+        mat.uniforms.uColor.value.set(1.0, 1.0, 1.0, 0.1);
+        mat.transparent = true;
+        mat.depthTest = false;
+        mat.depthWrite = false;
+        _sim.registerUniform(mat.uniforms.tPos);
+
+        _particles = new THREE.PointCloud(geo, mat);
         _particles.frustumCulled = false;
         _renderer.getScene().add(_particles);
-        _sim.registerUniform(_mat.uniforms.tPos);
-
-        // _copyPass = new ShaderPass(THREE.CopyShader);
-        // _sim.registerUniform(_copyPass.material.uniforms.tDiffuse);
-
-        // this.particles = _particles;
     };
 
     // INIT
@@ -89,7 +80,7 @@ var App = function() {
 
     // AUTHOR INIT
 
-    _customInit();
+    _sceneInit();
 
     // RUN
     _updateLoop.start();
