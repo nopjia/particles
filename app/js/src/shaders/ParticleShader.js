@@ -8,8 +8,9 @@ var ParticleShader = {
     vertexShader: [
         "uniform sampler2D tPos;",
         "void main() {",
-            "gl_PointSize = 1.0;",
-            "gl_Position = projectionMatrix * modelViewMatrix * vec4( texture2D(tPos, position.xy).rgb, 1.0 );",
+            "vec4 pos = texture2D(tPos, position.xy);",
+            "gl_PointSize = 3.0;",
+            "gl_Position = projectionMatrix * modelViewMatrix * vec4( pos.xyz, 1.0 );",
         "}"
     ].join("\n"),
 
