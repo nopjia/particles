@@ -1,4 +1,4 @@
-var PhysicsRenderer = function(renderer, shader, size) {
+var PhysicsRenderer = function(renderer, simShader, initShader, size) {
 
     // PRIVATE VARS
 
@@ -8,7 +8,7 @@ var PhysicsRenderer = function(renderer, shader, size) {
     var _size = size;
 
     var _target1, _target2, _target3, _outTargetPtr;
-    var _resetPass, _simPass, _debugPass;
+    var _simPass, _initPass, _debugPass;
 
     var _registeredUniforms = [];
 
@@ -98,9 +98,9 @@ var PhysicsRenderer = function(renderer, shader, size) {
     };
 
     this.reset = function() {
-        _resetPass.render(_renderer, _target1);
-        _resetPass.render(_renderer, _target2);
-        _resetPass.render(_renderer, _target3);
+        _initPass.render(_renderer, _target1);
+        _initPass.render(_renderer, _target2);
+        _initPass.render(_renderer, _target3);
     };
 
     // INITIALIZATION
@@ -113,8 +113,7 @@ var PhysicsRenderer = function(renderer, shader, size) {
     _target2 = _createTarget(_size);
     _target3 = _createTarget(_size);
 
-    // TODO_NOP
-    _target1.name = "PhysicsRenderer._target1";
+    _target1.name = "PhysicsRenderer._target1"; // debug tags
     _target2.name = "PhysicsRenderer._target2";
     _target3.name = "PhysicsRenderer._target3";
 
@@ -123,16 +122,14 @@ var PhysicsRenderer = function(renderer, shader, size) {
 
     // init shader pass
 
-    _simPass = new ShaderPass(shader);
-    _resetPass = new ShaderPass(PassShader);
+    _simPass = new ShaderPass(simShader);
+    _initPass = new ShaderPass(initShader);
     // _debugPass = new ShaderPass(SimDebugShader);
     // _debugPass.material.uniforms.tTarget1.value = _target1;
     // _debugPass.material.uniforms.tTarget2.value = _target2;
     // _debugPass.material.uniforms.tTarget3.value = _target3;
 
     this.reset();   // reset targets
-
-    // _debugPass.render(_renderer);
 
 };
 

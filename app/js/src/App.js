@@ -2,7 +2,7 @@ var App = function() {
 
     var _this = this;
 
-    var _renderer, _stats, _canvas, _updateLoop, _sim, _particles;
+    var _renderer, _stats, _canvas, _updateLoop, _sim;
 
     var _SIM_SIZE = 128;
 
@@ -46,9 +46,9 @@ var App = function() {
         for (var x=0; x<size; x++)
         for (var y=0; y<size; y++) {
             var idx = x + y*size;
-            pos[ATTR_WIDTH*idx]   = (x+0.5)/size;   // +0.5 to be at center of texel
+            pos[ATTR_WIDTH*idx]   = (x+0.5)/size;       // +0.5 to be at center of texel
             pos[ATTR_WIDTH*idx+1] = (y+0.5)/size;
-            pos[ATTR_WIDTH*idx+2] = idx/(size*size);       // extra: normalized id
+            pos[ATTR_WIDTH*idx+2] = idx/(size*size);    // extra: normalized id
         }
         geo.addAttribute("position", new THREE.BufferAttribute(pos, ATTR_WIDTH));
         return geo;
@@ -58,6 +58,7 @@ var App = function() {
         _sim = new PhysicsRenderer(
             _renderer.getRenderer(),
             SimShader,
+            SimInitShader,
             _SIM_SIZE
         );
 
@@ -69,9 +70,9 @@ var App = function() {
         mat.depthWrite = false;
         _sim.registerUniform(mat.uniforms.tPos);
 
-        _particles = new THREE.PointCloud(geo, mat);
-        _particles.frustumCulled = false;
-        _renderer.getScene().add(_particles);
+        var particles = new THREE.PointCloud(geo, mat);
+        particles.frustumCulled = false;
+        _renderer.getScene().add(particles);
     };
 
     // INIT
