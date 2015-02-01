@@ -2,9 +2,12 @@ var App = function() {
 
     var _this = this;
 
-    var _renderer, _stats, _canvas, _updateLoop, _sim;
+    var _canvas, _stats;
+    var _updateLoop;
+    var _renderer;
+    var _sim, _simMat, _initMat, _drawMat;
 
-    var _SIM_SIZE = 128;
+    var _SIM_SIZE = 256;
 
     // EVENTS
 
@@ -14,7 +17,10 @@ var App = function() {
 
     var _onFrameUpdate = function(dt, t) {
         _stats.begin();
+
+        _drawMat.uniforms.uTime.value = t;
         _renderer.update(dt);
+
         _stats.end();
     };
 
@@ -55,22 +61,27 @@ var App = function() {
     };
 
     var _sceneInit = function() {
+        _simMat = createShaderMaterial(SimShader);
+
+        _initMat = createShaderMaterial(SimInitShader);
+
         _sim = new PhysicsRenderer(
             _renderer.getRenderer(),
-            SimShader,
-            SimInitShader,
+            _simMat,
+            _initMat,
             _SIM_SIZE
         );
 
-        var geo = _createParticleGeometry(_SIM_SIZE);
-        var mat = createShaderMaterial(ParticleShader);
-        mat.uniforms.uColor.value.set(1.0, 1.0, 1.0, 0.1);
-        mat.transparent = true;
-        mat.depthTest = false;
-        mat.depthWrite = false;
-        _sim.registerUniform(mat.uniforms.tPos);
+        _drawMat = createShaderMaterial(ParticleShader);
+        _drawMat.uniforms.uColor.value.set(1.0, 1.0, 1.0, 0.5);
+        _drawMat.blending = THREE.AdditiveBlending;
+        _drawMat.transparent = true;
+        _drawMat.depthTest = false;
+        _drawMat.depthWrite = false;
+        _sim.registerUniform(_drawMat.uniforms.tPos);
 
-        var particles = new THREE.PointCloud(geo, mat);
+        var geo = _createParticleGeometry(_SIM_SIZE);
+        var particles = new THREE.PointCloud(geo, _drawMat);
         particles.frustumCulled = false;
         _renderer.getScene().add(particles);
     };

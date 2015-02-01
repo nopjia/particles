@@ -6,8 +6,13 @@ var createShaderMaterial = function(shader) {
     });
 };
 
+// can pass in shader or material
+
 var ShaderPass = function(shader) {
-    this.material = createShaderMaterial(shader);
+    if (shader instanceof THREE.Material)
+        this.material = shader;
+    else
+        this.material = createShaderMaterial(shader);
 
     this.material.blending = THREE.NoBlending;
     this.material.depthWrite = false;

@@ -26,6 +26,8 @@ var RenderContext = function(canvas) {
         preserveDrawingBuffer: false,
         logarithmicDepthBuffer: false,
         autoClear: false,
+        clearColor: 0x0,
+        clearAlpha: 1,
         sortObjects: true,
         shadowMapEnabled: false,
         shadowMapType: THREE.PCFShadowMap,
@@ -44,7 +46,7 @@ var RenderContext = function(canvas) {
     var _initRenderer = function() {
         _renderer = new THREE.WebGLRenderer(_rendererParams);
         _renderer.setSize(_w, _h);
-        _renderer.setClearColor(0x808080, 1);
+        _renderer.setClearColor(_rendererParams.clearColor, _rendererParams.clearAlpha);
         _renderer.autoClear = _rendererParams.autoClear;
         _renderer.sortObjects = _rendererParams.sortObjects;
         _renderer.shadowMapEnabled = _rendererParams.shadowMapEnabled;
