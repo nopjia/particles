@@ -5,6 +5,10 @@ var ShaderPass = function(shader) {
         fragmentShader: shader.fragmentShader
     });
 
+    this.material.blending = THREE.NoBlending;
+    this.material.depthWrite = false;
+    this.material.depthTest = false;
+
     // http://michaldrobot.com/2014/04/01/gcn-execution-patterns-in-full-screen-passes/
     var triangle = new THREE.BufferGeometry();
     var p = new Float32Array(9);

@@ -78,7 +78,7 @@ var RenderContext = function(canvas) {
         _controls.dynamicDampingFactor = 0.3;
         _controls.staticMoving = false;
         _controls.noZoom = false;
-        _controls.noPan = true;
+        _controls.noPan = false;
         _updateFuncs.push(_controls.update);
 
         this.customInit();
@@ -107,12 +107,12 @@ var RenderContext = function(canvas) {
     };
 
     this.customInit = function() {
-        var geometry = new THREE.BoxGeometry( 1, 1, 1 );
-        var material = new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe: true } );
-        var mesh = new THREE.Mesh( geometry, material );
-        _scene.add(mesh);
-
         _camera.position.z = 10;
+
+        // var geometry = new THREE.BoxGeometry( 1, 1, 1 );
+        // var material = new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe: true } );
+        // var mesh = new THREE.Mesh( geometry, material );
+        // _scene.add(mesh);
     };
 
     this.getRenderer = function() {

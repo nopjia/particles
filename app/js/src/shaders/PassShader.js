@@ -11,8 +11,11 @@ var PassShader = {
         "uniform sampler2D tDiffuse;",
         "uniform vec4 uColor;",
         "varying vec2 vUv;",
+        ShaderChunks.rand,
         "void main() {",
-            "gl_FragColor = vec4(vUv.x, vUv.y, 0.0, 1.0);",
+            "vec3 col = vec3(0.0);",
+            "col = vec3(vUv.x, vUv.y, rand(vUv));",
+            "gl_FragColor = vec4(vec3(col), 1.0);",
         "}",
     ].join("\n")
 

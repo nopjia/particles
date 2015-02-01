@@ -2,24 +2,29 @@ var App = function() {
 
     var _this = this;
 
+    var _renderer, _stats, _canvas, _updateLoop;
+
     var _SIM_SIZE = 128;
 
     var _sim;
 
+    var _copyPass;
+
     // EVENTS
 
     var _onWindowResize = function() {
-        _this.renderer.setSize(window.innerWidth, window.innerHeight);
+        _renderer.setSize(window.innerWidth, window.innerHeight);
     };
 
     var _onFrameUpdate = function(dt, t) {
-        _this.stats.begin();
-        _this.renderer.update(dt);
-        _this.stats.end();
+        _stats.begin();
+        // _renderer.update(dt);
+        _copyPass.render(_renderer.getRenderer());
+        _stats.end();
     };
 
     var _onFixedUpdate = function(dt, t) {
-        // _sim.update(dt); // TODO_NOP: shit's broke
+        _sim.update(dt, t);
     };
 
     // PRIVATE FUNCTIONS
@@ -27,16 +32,16 @@ var App = function() {
     var _init = function() {
         window.addEventListener("resize", _onWindowResize, false);
 
-        _this.canvas = document.querySelector("#webgl-canvas");
-        _this.renderer = new RenderContext(_this.canvas);
-        _this.renderer.init();
+        _canvas = document.querySelector("#webgl-canvas");
+        _renderer = new RenderContext(_canvas);
+        _renderer.init();
 
-        _this.stats = new Stats();
-        document.body.appendChild(_this.stats.domElement);
+        _stats = new Stats();
+        document.body.appendChild(_stats.domElement);
 
-        _this.updateLoop = new UpdateLoop();
-        _this.updateLoop.frameCallback = _onFrameUpdate;
-        _this.updateLoop.fixedCallback = _onFixedUpdate;
+        _updateLoop = new UpdateLoop();
+        _updateLoop.frameCallback = _onFrameUpdate;
+        _updateLoop.fixedCallback = _onFixedUpdate;
     };
 
     var _createParticleGeometry = function(size) {
@@ -54,19 +59,24 @@ var App = function() {
         return geo;
     };
 
+    var _geo, _mat, _particles;
+
     var _customInit = function() {
         _sim = new PhysicsRenderer(
-            _this.renderer.getRenderer(),
+            _renderer.getRenderer(),
             SimShader,
             _SIM_SIZE
         );
 
-        var geo = _createParticleGeometry(_SIM_SIZE);
-        var mat = new THREE.ShaderMaterial(ParticleShader);
-        var particles = new THREE.PointCloud(geo, mat);
-        particles.frustumCulled = false;
-        _this.renderer.getScene().add(particles);
-        _sim.registerUniform(mat.uniforms.tPos);
+        _geo = _createParticleGeometry(_SIM_SIZE);
+        _mat = new THREE.ShaderMaterial(ParticleShader);
+        _particles = new THREE.PointCloud(_geo, _mat);
+        _particles.frustumCulled = false;
+        _renderer.getScene().add(_particles);
+        _sim.registerUniform(_mat.uniforms.tPos);
+
+        _copyPass = new ShaderPass(THREE.CopyShader);
+        _sim.registerUniform(_copyPass.material.uniforms.tDiffuse);
     };
 
     // INIT
@@ -78,7 +88,7 @@ var App = function() {
     _customInit();
 
     // RUN
-    this.updateLoop.start();
+    _updateLoop.start();
 
 };
 
