@@ -1,5 +1,3 @@
-"use strict";
-
 var PhysicsRenderer = function(renderer, shader, size) {
 
     // PRIVATE VARS
@@ -9,10 +7,12 @@ var PhysicsRenderer = function(renderer, shader, size) {
     var _renderer = renderer;
     var _size = size;
 
-    var _target1, _target2, _target3;
-    var _simPass;
+    var _target1, _target2, _target3, _outTargetPtr;
+    var _resetPass, _simPass;
 
-    var _currUpdateTarget = 1;
+    var _registeredUniforms = [];
+
+    var _currUpdateTarget;
 
     // PRIVATE FUNCTIONS
 
@@ -30,34 +30,41 @@ var PhysicsRenderer = function(renderer, shader, size) {
         }
     };
 
-    var _updateUniforms = function() {
-        // TODO_NOP
+    var _updateRegisteredUniforms = function() {
+        for (var i=0; i<_registeredUniforms.length; i++) {
+            _registeredUniforms[i].value = _outTargetPtr;
+        }
     };
 
     // PUBLIC FUNCTIONS
 
-    this.update = function() {
+    this.update = function(dt) {
+        _simPass.material.uniforms.uDeltaT.value = dt;
+
         if (_currUpdateTarget === 1) {
             _simPass.material.uniforms.tPrev.value = _target2;
             _simPass.material.uniforms.tCurr.value = _target3;
             _simPass.render(_renderer, _target1);
+            _outTargetPtr = _target1;
         }
         else if (_currUpdateTarget === 2) {
             _simPass.material.uniforms.tPrev.value = _target3;
             _simPass.material.uniforms.tCurr.value = _target1;
             _simPass.render(_renderer, _target2);
+            _outTargetPtr = _target2;
         }
         else if (_currUpdateTarget === 3) {
             _simPass.material.uniforms.tPrev.value = _target1;
             _simPass.material.uniforms.tCurr.value = _target2;
             _simPass.render(_renderer, _target3);
+            _outTargetPtr = _target3;
         }
         else {
             console.error("PhysicsRenderer: something's wrong!");
         }
 
         // update uniforms
-        _updateUniforms();
+        _updateRegisteredUniforms();
 
         // increment target
         _currUpdateTarget++;
@@ -66,11 +73,18 @@ var PhysicsRenderer = function(renderer, shader, size) {
     };
 
     this.registerUniform = function(uniform) {
-        // TODO_NOP
+        _registeredUniforms.push(uniform);
+        uniform.value = _outTargetPtr;
     };
 
     this.getUniforms = function() {
         return _simPass.material.uniforms;
+    };
+
+    this.reset = function() {
+        _resetPass.render(_renderer, _target1);
+        _resetPass.render(_renderer, _target2);
+        _resetPass.render(_renderer, _target3);
     };
 
     // INITIALIZATION
@@ -80,6 +94,7 @@ var PhysicsRenderer = function(renderer, shader, size) {
     // init shader pass
 
     _simPass = new ShaderPass(shader);
+    _resetPass = new ShaderPass(PassShader);
 
     // init targets
 
@@ -93,7 +108,10 @@ var PhysicsRenderer = function(renderer, shader, size) {
     _target2 = _target1.clone();
     _target3 = _target1.clone();
 
-    // TODO_NOP: clear / reset textures
+    _currUpdateTarget = 1;
+    _outTargetPtr = _target1;
+
+    this.reset();   // reset targets
 
 };
 
