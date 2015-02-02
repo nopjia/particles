@@ -37,6 +37,8 @@ uniform sampler2D tPrev;
 uniform sampler2D tCurr;
 uniform float uDeltaT;
 uniform float uTime;
+uniform vec3 uInputPos;
+uniform int uInputPosEnabled;
 
 void main() {
 
@@ -50,44 +52,52 @@ void main() {
     vec3 accel = vec3(0.0);
 
     // target shape
+    {
+        // vec3 targetPos = vec3(
+        //     coords.x,
+        //     0.0,//sin(vUv.x*10.0)*sin(vUv.y*10.0),
+        //     coords.y);
 
-    // vec3 targetPos = vec3(
-    //     coords.x,
-    //     0.0,//sin(vUv.x*10.0)*sin(vUv.y*10.0),
-    //     coords.y);
+        // cylindrical coords
+        float radius = vUv.y;
+        float theta = vUv.x * M_2PI;
 
-    // cylindrical coords
-    float radius = vUv.y;
-    float theta = vUv.x * M_2PI;
+        // outward spiral function
+        radius *= M_PI;
+        vec3 targetPos = vec3(
+            radius * sin(theta),
+            radius*radius * sin(3.0*theta + sin(4.0*M_PI*radius+uTime/2.0)) / 10.0,
+            radius * cos(theta)
+        );
 
-    // outward spiral function
-    radius *= M_PI;
-    vec3 targetPos = vec3(
-        radius * sin(theta),
-        radius*radius * sin(3.0*theta + sin(4.0*M_PI*radius+uTime/2.0)) / 10.0,
-        radius * cos(theta)
-    );
+        // vec2 coords = vUv;
+        // coords.x = coords.x * M_2PI - M_PI; // theta (lat)
+        // coords.y = coords.y * M_PI;         // phi (long)
+        // vec3 sphereCoords = vec3(
+        //     sin(coords.x) * cos(coords.y),
+        //     cos(coords.x),
+        //     sin(coords.x) * sin(coords.y)
+        // );
 
-    // vec2 coords = vUv;
-    // coords.x = coords.x * M_2PI - M_PI; // theta (lat)
-    // coords.y = coords.y * M_PI;         // phi (long)
-    // vec3 sphereCoords = vec3(
-    //     sin(coords.x) * cos(coords.y),
-    //     cos(coords.x),
-    //     sin(coords.x) * sin(coords.y)
-    // );
+        // float r = 0.5 + cos(coords.x);
+        // // r += 0.5 * snoise(10.0*sphereCoords + 5.0*uTime);
+        // vec3 targetPos = r * sphereCoords;
+        // targetPos *= 2.0;
 
-    // float r = 0.5 + cos(coords.x);
-    // // r += 0.5 * snoise(10.0*sphereCoords + 5.0*uTime);
-    // vec3 targetPos = r * sphereCoords;
-    // targetPos *= 2.0;
-
-    vec3 toCenter = targetPos - currPos;
-    float toCenterLength = length(toCenter);
-    accel += (toCenter/toCenterLength) * 0.5;  // balance between this and noise
+        vec3 toCenter = targetPos - currPos;
+        float toCenterLength = length(toCenter);
+        accel += (toCenter/toCenterLength) * 0.5;  // balance between this and noise
+    }
 
     // noise
     // accel += curlNoise(currPos+uTime/10.0) * 0.05;
+
+    // input pos
+    if (uInputPosEnabled > 0) {
+        vec3 toCenter = uInputPos - currPos;
+        float toCenterLength = length(toCenter);
+        accel += (toCenter/toCenterLength) * 1.0/toCenterLength;
+    }
 
     // state updates
     vel = K_VEL_DECAY * vel + accel * uDeltaT;
