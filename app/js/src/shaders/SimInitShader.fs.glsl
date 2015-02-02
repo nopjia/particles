@@ -9,7 +9,8 @@ float rand(vec2 seed) {
 }
 
 void main() {
-    vec3 pos = vec3(vUv.x, vUv.y, rand(vUv));
+    // vec3 pos = vec3(vUv.x, vUv.y, rand(vUv));
+    vec3 pos = vec3(vUv.x, vUv.y, 0.0);
 
     // transform
     vec3 center = vec3(0.0, 0.0, 0.0);
