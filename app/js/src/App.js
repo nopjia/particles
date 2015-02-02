@@ -65,7 +65,7 @@ var App = function() {
 
         _initMat = createShaderMaterial(SimInitShader);
 
-        _sim = new PhysicsRenderer(
+        _sim = new SimulationRenderer(
             _renderer.getRenderer(),
             _simMat,
             _initMat,

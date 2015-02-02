@@ -1,4 +1,4 @@
-var PhysicsRenderer = function(renderer, simMat, initMat, size) {
+var SimulationRenderer = function(renderer, simMat, initMat, size) {
 
     // PRIVATE VARS
 
@@ -20,12 +20,12 @@ var PhysicsRenderer = function(renderer, simMat, initMat, size) {
         var gl = renderer.context;
 
         if ( gl.getExtension( "OES_texture_float" ) === null ) {
-            console.error("PhysicsRenderer: OES_texture_float not supported.");
+            console.error("SimulationRenderer: OES_texture_float not supported.");
             return;
         }
 
         if ( gl.getParameter( gl.MAX_VERTEX_TEXTURE_IMAGE_UNITS ) === 0 ) {
-            console.error("PhysicsRenderer: Vertex shader textures not supported.");
+            console.error("SimulationRenderer: Vertex shader textures not supported.");
             return;
         }
     };
@@ -74,7 +74,7 @@ var PhysicsRenderer = function(renderer, simMat, initMat, size) {
             _outTargetPtr = _target3;
         }
         else {
-            console.error("PhysicsRenderer: something's wrong!");
+            console.error("SimulationRenderer: something's wrong!");
         }
 
         // _debugPass.render(_renderer);
@@ -109,9 +109,9 @@ var PhysicsRenderer = function(renderer, simMat, initMat, size) {
     _target2 = _createTarget(_size);
     _target3 = _createTarget(_size);
 
-    _target1.name = "PhysicsRenderer._target1"; // debug tags
-    _target2.name = "PhysicsRenderer._target2";
-    _target3.name = "PhysicsRenderer._target3";
+    _target1.name = "SimulationRenderer._target1"; // debug tags
+    _target2.name = "SimulationRenderer._target2";
+    _target3.name = "SimulationRenderer._target3";
 
     _currUpdateTarget = 1;
     _outTargetPtr = _target1;
@@ -129,4 +129,4 @@ var PhysicsRenderer = function(renderer, simMat, initMat, size) {
 
 };
 
-PhysicsRenderer.prototype.constructor = PhysicsRenderer;
+SimulationRenderer.prototype.constructor = SimulationRenderer;
