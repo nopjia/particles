@@ -64,7 +64,7 @@ void main() {
     radius *= M_PI;
     vec3 targetPos = vec3(
         radius * sin(theta),
-        radius*radius * sin(4.0*theta + sin(3.0*M_PI*radius+uTime/2.0)) / 10.0,
+        radius*radius * sin(3.0*theta + sin(4.0*M_PI*radius+uTime/2.0)) / 10.0,
         radius * cos(theta)
     );
 
@@ -84,10 +84,10 @@ void main() {
 
     vec3 toCenter = targetPos - currPos;
     float toCenterLength = length(toCenter);
-    accel += (toCenter/toCenterLength) * 1.0;  // balance between this and noise
+    accel += (toCenter/toCenterLength) * 0.5;  // balance between this and noise
 
     // noise
-    // accel += curlNoise(currPos+uTime/10.0) * 0.1;
+    // accel += curlNoise(currPos+uTime/10.0) * 0.05;
 
     // state updates
     vel = K_VEL_DECAY * vel + accel * uDeltaT;
