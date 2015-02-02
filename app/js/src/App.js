@@ -1,13 +1,16 @@
 var App = function() {
 
+    var _SIM_SIZE = 256;
+
     var _this = this;
 
     var _canvas, _stats;
     var _updateLoop;
-    var _renderer;
+    var _renderer, _camera;
     var _sim, _simMat, _initMat, _drawMat;
+    var _mouse;
 
-    var _SIM_SIZE = 256;
+    var _raycaster, _camTargetPlane;
 
     // EVENTS
 
@@ -18,6 +21,7 @@ var App = function() {
     var _onFrameUpdate = function(dt, t) {
         _stats.begin();
 
+        _mouseUpdate();
         _drawMat.uniforms.uTime.value = t;
         _renderer.update(dt);
 
@@ -33,16 +37,21 @@ var App = function() {
     var _init = function() {
         window.addEventListener("resize", _onWindowResize, false);
 
-        _canvas = document.querySelector("#webgl-canvas");
-        _renderer = new RenderContext(_canvas);
-        _renderer.init();
-
         _stats = new Stats();
         document.body.appendChild(_stats.domElement);
 
         _updateLoop = new UpdateLoop();
         _updateLoop.frameCallback = _onFrameUpdate;
         _updateLoop.fixedCallback = _onFixedUpdate;
+
+        _canvas = document.querySelector("#webgl-canvas");
+
+        _mouse = new Mouse();
+
+        _renderer = new RenderContext(_canvas);
+        _renderer.init();
+        _camera = _renderer.getCamera();
+        _raycaster = new THREE.Raycaster();
     };
 
     var _createParticleGeometry = function(size) {
@@ -84,6 +93,28 @@ var App = function() {
         var particles = new THREE.PointCloud(geo, _drawMat);
         particles.frustumCulled = false;
         _renderer.getScene().add(particles);
+
+        _camTargetPlane = new THREE.Plane(
+            new THREE.Vector3(0, 0, 1), 0);
+    };
+
+    var _mouseUpdate = function() {
+        if (_mouse.buttons[0]) {
+            _raycaster.setFromCamera(_mouse.coords, _camera);
+
+            // calc plane, this mat multiply is ridic
+            // TODO_NOP: fix this math and test rotation
+            _camTargetPlane.applyMatrix4((new THREE.Matrix4()).makeRotationFromEuler(_camera.rotation));
+
+            // intersect plane
+            var point = _raycaster.ray.intersectPlane(_camTargetPlane);
+
+            _simMat.uniforms.uInputPos.value.copy(point);
+            _simMat.uniforms.uInputPosEnabled.value = 1;
+        }
+        else {
+            _simMat.uniforms.uInputPosEnabled.value = 0;
+        }
     };
 
     // INIT

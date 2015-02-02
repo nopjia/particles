@@ -73,15 +73,15 @@ var RenderContext = function(canvas) {
 
         _scene = new THREE.Scene();
 
-        _controls = new THREE.TrackballControls(_camera, _canvas);
-        _controls.rotateSpeed = 1.0;
-        _controls.zoomSpeed = 1.2;
-        _controls.panSpeed = 1.0;
-        _controls.dynamicDampingFactor = 0.3;
-        _controls.staticMoving = false;
-        _controls.noZoom = false;
-        _controls.noPan = false;
-        _updateFuncs.push(_controls.update);
+        // _controls = new THREE.TrackballControls(_camera, _canvas);
+        // _controls.rotateSpeed = 1.0;
+        // _controls.zoomSpeed = 1.2;
+        // _controls.panSpeed = 1.0;
+        // _controls.dynamicDampingFactor = 0.3;
+        // _controls.staticMoving = false;
+        // _controls.noZoom = false;
+        // _controls.noPan = false;
+        // _updateFuncs.push(_controls.update);
 
         this.customInit();
     };
@@ -96,7 +96,7 @@ var RenderContext = function(canvas) {
         _camera.aspect = _aspect;
         _camera.updateProjectionMatrix();
 
-        _controls.handleResize();
+        // _controls.handleResize();
     };
 
     this.update = function(dt) {
