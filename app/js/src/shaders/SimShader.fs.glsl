@@ -51,15 +51,17 @@ void main() {
 
     vec3 accel = vec3(0.0);
 
+    float portionHaveTarget = 0.8;
+
     // target shape
-    {
+    if (vUv.y < portionHaveTarget) {
         // vec3 targetPos = vec3(
         //     coords.x,
         //     0.0,//sin(vUv.x*10.0)*sin(vUv.y*10.0),
         //     coords.y);
 
         // cylindrical coords
-        float radius = vUv.y;
+        float radius = vUv.y / portionHaveTarget;
         float theta = vUv.x * M_2PI;
 
         // outward spiral function
@@ -86,11 +88,14 @@ void main() {
 
         vec3 toCenter = targetPos - currPos;
         float toCenterLength = length(toCenter);
-        accel += (toCenter/toCenterLength) * 0.2;
+        accel += 0.2 * toCenter/toCenterLength;
     }
 
     // noise
-    // accel += curlNoise(currPos+uTime/10.0) * 0.05;
+    else {
+        float noiseTime = uTime;
+        accel += 0.1 * curlNoise(currPos + vec3(sin(noiseTime), cos(noiseTime), sin(noiseTime)*cos(noiseTime)));
+    }
 
     // input pos
     if (uInputPosEnabled > 0) {
