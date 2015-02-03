@@ -1,16 +1,16 @@
 var App = function() {
 
-    var _SIM_SIZE = 256;
+    var _SIM_SIZE = 512;
 
     var _this = this;
 
     var _canvas, _stats;
     var _updateLoop;
-    var _renderer, _camera;
+    var _renderer, _camera, _scene;
     var _sim, _simMat, _initMat, _drawMat;
     var _mouse;
 
-    var _raycaster, _camTargetPlane;
+    var _controls, _raycaster;
 
     // EVENTS
 
@@ -22,6 +22,7 @@ var App = function() {
         _stats.begin();
 
         _mouseUpdate();
+        _controls.update();
         _drawMat.uniforms.uTime.value = t;
         _renderer.update(dt);
 
@@ -51,7 +52,7 @@ var App = function() {
         _renderer = new RenderContext(_canvas);
         _renderer.init();
         _camera = _renderer.getCamera();
-        _raycaster = new THREE.Raycaster();
+        _scene = _renderer.getScene();
     };
 
     var _createParticleGeometry = function(size) {
@@ -92,22 +93,31 @@ var App = function() {
         var geo = _createParticleGeometry(_SIM_SIZE);
         var particles = new THREE.PointCloud(geo, _drawMat);
         particles.frustumCulled = false;
-        _renderer.getScene().add(particles);
+        _scene.add(particles);
 
-        _camTargetPlane = new THREE.Plane(
-            new THREE.Vector3(0, 0, 1), 0);
+        _camera.position.set(0,0,8);
+        _controls = new THREE.OrbitControls(_camera, _canvas);
+        _controls.rotateUp(Math.PI/6);
+        _controls.autoRotate = true;
+        _controls.autoRotateSpeed = 1.0;
+        _controls.enabled = false;  // disable user input
+
+        _raycaster = new THREE.Raycaster();
     };
 
     var _mouseUpdate = function() {
         if (_mouse.buttons[0]) {
             _raycaster.setFromCamera(_mouse.coords, _camera);
 
-            // calc plane, this mat multiply is ridic
-            // TODO_NOP: fix this math and test rotation
-            _camTargetPlane.applyMatrix4((new THREE.Matrix4()).makeRotationFromEuler(_camera.rotation));
+            // from target point to camera
+            var pos = _controls.target;
+            var nor = pos.clone().sub(_camera.position).normalize();
+            var plane = new THREE.Plane(
+                nor, -nor.x*pos.x - nor.y*pos.y - nor.z*pos.z
+            );
 
             // intersect plane
-            var point = _raycaster.ray.intersectPlane(_camTargetPlane);
+            var point = _raycaster.ray.intersectPlane(plane);
 
             _simMat.uniforms.uInputPos.value.copy(point);
             _simMat.uniforms.uInputPosEnabled.value = 1;

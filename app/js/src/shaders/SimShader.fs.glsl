@@ -66,7 +66,7 @@ void main() {
         radius *= M_PI;
         vec3 targetPos = vec3(
             radius * sin(theta),
-            radius*radius * sin(3.0*theta + sin(4.0*M_PI*radius+uTime/2.0)) / 10.0,
+            radius*radius * sin(3.0*theta + sin(3.0*M_PI*radius+uTime/2.0)) / 10.0,
             radius * cos(theta)
         );
 
@@ -86,7 +86,7 @@ void main() {
 
         vec3 toCenter = targetPos - currPos;
         float toCenterLength = length(toCenter);
-        accel += (toCenter/toCenterLength) * 0.5;  // balance between this and noise
+        accel += (toCenter/toCenterLength) * 0.2;
     }
 
     // noise
@@ -96,7 +96,7 @@ void main() {
     if (uInputPosEnabled > 0) {
         vec3 toCenter = uInputPos - currPos;
         float toCenterLength = length(toCenter);
-        accel += (toCenter/toCenterLength) * 1.0/toCenterLength;
+        accel += (toCenter/toCenterLength) * 2.0/toCenterLength;
     }
 
     // state updates
