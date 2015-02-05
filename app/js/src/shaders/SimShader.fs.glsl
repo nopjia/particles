@@ -94,7 +94,7 @@ void main() {
     // noise
     else {
         float noiseTime = uTime;
-        accel += 0.1 * curlNoise(currPos + vec3(sin(noiseTime), cos(noiseTime), sin(noiseTime)*cos(noiseTime)));
+        accel += 0.05 * curlNoise(currPos);// + vec3(sin(noiseTime), cos(noiseTime), sin(noiseTime)*cos(noiseTime)));
     }
 
     // input pos
