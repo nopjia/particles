@@ -68,7 +68,7 @@ void main() {
         radius *= M_PI;
         vec3 targetPos = vec3(
             radius * sin(theta),
-            radius*radius * sin(3.0*theta + sin(3.0*M_PI*radius+uTime/2.0)) / 10.0,
+            radius*radius * sin(4.0*theta + sin(3.0*M_PI*radius+uTime/2.0)) / 10.0,
             radius * cos(theta)
         );
 
