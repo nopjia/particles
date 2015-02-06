@@ -50,10 +50,9 @@
         };
     };
 
-    var DefaultMobile = function() {
-        this.size = 128;
+    var Basic = function() {
+        this.size = Utils.isMobile ? 128 : 512;
         var _drawMat = this.drawMat = createShaderMaterial(BasicParticleShader);
-        _drawMat.defines.POINT_SIZE = "5.0";
         var _color = new THREE.Color(1.0, 0.5, 0.3);
         var _alpha = 0.3;
         this.update = function(dt, t) {
@@ -74,16 +73,19 @@
 
     var preset;
     if (Utils.isMobile)
-        preset = DefaultMobile;
+        preset = Basic;
     else
         preset = RoseGalaxy;
 
     var hashPresets = {
-        sphere: Sphere
+        basic: Basic,
+        sphere: Sphere,
     };
-
     var hashLookup = hashPresets[window.location.hash.substr(1)];
     if (hashLookup) preset = hashLookup;
+    window.onhashchange = function() {
+        window.location.reload();
+    };
 
     var app = new App(new preset());
 })();
