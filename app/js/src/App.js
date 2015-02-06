@@ -123,7 +123,7 @@ var App = function() {
         var mIdMax = Utils.isMobile ? 4 : 1;
         for (var mId=0; mId<mIdMax; mId++) {
             var ms = _mouse.getMouse(mId);
-            if (ms.buttons[0]) {
+            if (ms.buttons[0] || (mId===0 && ms.buttons[2])) {
                 _raycaster.setFromCamera(ms.coords, _camera);
 
                 // from target point to camera
@@ -137,7 +137,7 @@ var App = function() {
                 var point = _raycaster.ray.intersectPlane(plane);
 
                 _simMat.uniforms.uInputPos.value[mId].copy(point);
-                _simMat.uniforms.uInputPosFlag.value.setComponent(mId, 1);
+                _simMat.uniforms.uInputPosFlag.value.setComponent(mId, ms.buttons[0] ? 1 : -1);
             }
             else {
                 _simMat.uniforms.uInputPosFlag.value.setComponent(mId, 0);
