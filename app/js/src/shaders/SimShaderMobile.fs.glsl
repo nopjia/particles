@@ -50,7 +50,7 @@ void main() {
 
     // input pos
 
-    #define PROCESS_INPUT_POS(FLAG, POS) if ((FLAG) > 0.0) { vec3 toCenter = (POS) - currPos; float toCenterLength = length(toCenter); accel += (toCenter/toCenterLength) * (FLAG)*K_INPUT_ACCEL/toCenterLength; }
+    #define PROCESS_INPUT_POS(FLAG, POS) if ((FLAG) != 0.0) { vec3 toCenter = (POS)-currPos; float toCenterLength = length(toCenter); accel += (toCenter/toCenterLength) * (FLAG)*K_INPUT_ACCEL/toCenterLength; }
 
     PROCESS_INPUT_POS(uInputPosFlag.x, uInputPos[0]);
     #ifdef MULTIPLE_INPUT
