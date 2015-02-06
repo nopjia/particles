@@ -19,7 +19,7 @@ var ParticleShader = {
 var BasicParticleShader = {
 
     defines: {
-        "POINT_SIZE": "5.0"
+        "POINT_SIZE": Utils.isMobile ? "5.0" : "1.0",
     },
 
     uniforms: {
