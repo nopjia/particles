@@ -19,7 +19,7 @@ var ParticleShader = {
 var BasicParticleShader = {
 
     defines: {
-        "POINT_SIZE": "1.0"
+        "POINT_SIZE": "5.0"
     },
 
     uniforms: {

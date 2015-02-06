@@ -18,7 +18,7 @@ var App = function(params) {
     _simMat = params.simMat || createShaderMaterial(BasicSimShader);
     _initMat = params.initMat || createShaderMaterial(SimInitShader);
     _drawMat = params.drawMat || createShaderMaterial(BasicParticleShader);
-    _customUpdate = params.update || [];
+    _customUpdate = params.update;
 
     // EVENTS
 
