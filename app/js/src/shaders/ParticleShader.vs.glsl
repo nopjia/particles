@@ -3,11 +3,17 @@
 #define PS_SIZE_AT_MAX_DIST 3.0
 
 uniform sampler2D tPos;
+uniform float uTime;
 
-varying vec3 vPos;
+varying vec3 vColor;
 
 void main() {
-    vPos = position;
+    // animate color
+    vColor = vec3(
+        1.0,//-sin(uTime*2.0 + position.z*4.0),
+        1.0,//cos(uTime*2.0 + position.z*4.0),
+        sin(uTime*2.0 + position.z*4.0)
+    ) / 2.0 + 0.5;
 
     vec4 posSample = texture2D(tPos, position.xy);
     vec3 pos = posSample.rgb;
