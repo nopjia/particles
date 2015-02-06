@@ -13,6 +13,9 @@ var App = function() {
 
     var _controls, _raycaster;
 
+    var _mobileColor = new THREE.Color(1.0, 0.4, 0.2);
+
+
     // EVENTS
 
     var _onWindowResize = function() {
@@ -25,6 +28,7 @@ var App = function() {
         _mouseUpdate();
         _controls.update();
         _drawMat.uniforms.uTime.value = t;
+        _mobileUpdate(dt, t);
         _renderer.update(dt);
 
         _stats.end();
@@ -145,6 +149,11 @@ var App = function() {
         //     +" "+_simMat.uniforms.uInputPosFlag.value.y.toFixed(2)
         //     +" "+_simMat.uniforms.uInputPosFlag.value.z.toFixed(2)
         //     +" "+_simMat.uniforms.uInputPosFlag.value.w.toFixed(2);
+    };
+
+    var _mobileUpdate = function(dt, t) {
+        _mobileColor.offsetHSL(0.1*dt, 0.0, 0.0);
+        _drawMat.uniforms.uColor.value.set(_mobileColor.r, _mobileColor.g, _mobileColor.b, 0.3);
     };
 
     // INIT
