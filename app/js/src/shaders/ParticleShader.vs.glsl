@@ -1,5 +1,6 @@
 #define PS_CAM_MAX_DIST 12.0
 #define PS_MAX_SIZE 20.0
+#define PS_SIZE_AT_MAX_DIST 3.0
 
 uniform sampler2D tPos;
 
@@ -15,7 +16,7 @@ void main() {
     float camDist = length(camToPos);
 
     // gl_PointSize = max(PS_MAX_SIZE*(1.0-camDist/PS_CAM_MAX_DIST), 1.0);
-    gl_PointSize = max(3.0*PS_CAM_MAX_DIST/camDist, 1.0);
+    gl_PointSize = max(PS_SIZE_AT_MAX_DIST * PS_CAM_MAX_DIST/camDist, 1.0);
 
     gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
 }

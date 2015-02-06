@@ -1,6 +1,6 @@
 var App = function() {
 
-    var _SIM_SIZE = 512;
+    var _SIM_SIZE = 128;
 
     var _this = this;
 
@@ -47,7 +47,7 @@ var App = function() {
 
         _canvas = document.querySelector("#webgl-canvas");
 
-        _mouse = new Mouse();
+        _mouse = new Mouse(_canvas);
 
         _renderer = new RenderContext(_canvas);
         _renderer.init();
@@ -106,8 +106,8 @@ var App = function() {
     };
 
     var _mouseUpdate = function() {
-        if (_mouse.buttons[0]) {
-            _raycaster.setFromCamera(_mouse.coords, _camera);
+        if (_mouse.getMouse().buttons[0]) {
+            _raycaster.setFromCamera(_mouse.getMouse().coords, _camera);
 
             // from target point to camera
             var pos = _controls.target;
