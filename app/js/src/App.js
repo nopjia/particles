@@ -1,7 +1,4 @@
-var App = function() {
-
-    var _SIM_SIZE = 512;
-    var _SIM_SIZE_MOBILE = 128;
+var App = function(params) {
 
     var _this = this;
 
@@ -10,11 +7,18 @@ var App = function() {
     var _renderer, _camera, _scene;
     var _sim, _simMat, _initMat, _drawMat;
     var _mouse;
-
     var _controls, _raycaster;
+    var _customUpdate;
 
-    var _mobileColor = new THREE.Color(1.0, 0.4, 0.2);
 
+    // PARAMS
+
+    params = params || {};
+    _size = params.size || 512;
+    _simMat = params.simMat || createShaderMaterial(BasicSimShader);
+    _initMat = params.initMat || createShaderMaterial(SimInitShader);
+    _drawMat = params.drawMat || createShaderMaterial(BasicParticleShader);
+    _customUpdate = params.update || [];
 
     // EVENTS
 
@@ -27,8 +31,9 @@ var App = function() {
 
         _mouseUpdate();
         _controls.update();
-        _drawMat.uniforms.uTime.value = t;
-        _mobileUpdate(dt, t);
+
+        _customUpdate && _customUpdate(dt, t);
+
         _renderer.update(dt);
 
         _stats.end();
@@ -37,6 +42,7 @@ var App = function() {
     var _onFixedUpdate = function(dt, t) {
         _sim.update(dt, t);
     };
+
 
     // PRIVATE FUNCTIONS
 
@@ -60,50 +66,13 @@ var App = function() {
         _scene = _renderer.getScene();
     };
 
-    var _createParticleGeometry = function(size) {
-        var ATTR_WIDTH = 3;
-        var geo = new THREE.BufferGeometry();
-        var pos = new Float32Array(size*size*ATTR_WIDTH);
-        for (var x=0; x<size; x++)
-        for (var y=0; y<size; y++) {
-            var idx = x + y*size;
-            pos[ATTR_WIDTH*idx]   = (x+0.5)/size;       // +0.5 to be at center of texel
-            pos[ATTR_WIDTH*idx+1] = (y+0.5)/size;
-            pos[ATTR_WIDTH*idx+2] = idx/(size*size);    // extra: normalized id
-        }
-        geo.addAttribute("position", new THREE.BufferAttribute(pos, ATTR_WIDTH));
-        return geo;
-    };
-
     var _sceneInit = function() {
-        _simMat = createShaderMaterial(SimShader);
-
-        if (Utils.isMobile) {
-            _simMat.defines.MULTIPLE_INPUT = "";
-            _SIM_SIZE = _SIM_SIZE_MOBILE;
-        }
-
-        _initMat = createShaderMaterial(SimInitShader);
-
-        _sim = new SimulationRenderer(
-            _renderer.getRenderer(),
-            _simMat,
-            _initMat,
-            _SIM_SIZE
-        );
-
-        _drawMat = createShaderMaterial(ParticleShader);
-        _drawMat.uniforms.uColor.value.set(1.0, 0.5, 1.0, 0.2);
-        _drawMat.blending = THREE.AdditiveBlending;
-        _drawMat.transparent = true;
-        _drawMat.depthTest = false;
-        _drawMat.depthWrite = false;
-        _sim.registerUniform(_drawMat.uniforms.tPos);
-
-        var geo = _createParticleGeometry(_SIM_SIZE);
-        var particles = new THREE.PointCloud(geo, _drawMat);
-        particles.frustumCulled = false;
-        _scene.add(particles);
+        _sim = new ParticleSimulation(_renderer.getRenderer(), _size, {
+            simMat: _simMat,
+            initMat: _initMat,
+            drawMat: _drawMat
+        });
+        _scene.add(_sim.getParticleObject());
 
         _camera.position.set(0,0,8);
         _controls = new THREE.OrbitControls(_camera, _canvas);
@@ -151,18 +120,10 @@ var App = function() {
         //     +" "+_simMat.uniforms.uInputPosFlag.value.w.toFixed(2);
     };
 
-    var _mobileUpdate = function(dt, t) {
-        if (!Utils.isMobile) return;
-        _mobileColor.offsetHSL(0.1*dt, 0.0, 0.0);
-        _drawMat.uniforms.uColor.value.set(_mobileColor.r, _mobileColor.g, _mobileColor.b, 0.3);
-    };
-
     // INIT
-
     _init();
 
     // AUTHOR INIT
-
     _sceneInit();
 
     // RUN
