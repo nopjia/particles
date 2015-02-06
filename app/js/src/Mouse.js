@@ -54,28 +54,28 @@ var Mouse = function(dom) {
 
     // TOUCH
 
-    var _touchUpdate = function(e) {
-    };
-
     var _onTouchMove = function(e) {
-        for (var i=0; i<e.touches.length; i++) {
-            _mouseUpdate(e.touches[i], i);
+        var touches = e.changedTouches;
+        for (var i=0; i<touches.length; i++) {
+            _mouseUpdate(touches[i], touches[i].identifier);
         }
         e.preventDefault();
     };
 
     var _onTouchDown = function(e) {
-        for (var i=0; i<e.touches.length; i++) {
-            _mouseUpdate(e.touches[i], i);
-            _this.getMouse(i).buttons[0] = true;
+        var touches = e.changedTouches;
+        for (var i=0; i<touches.length; i++) {
+            _mouseUpdate(touches[i], touches[i].identifier);
+            _this.getMouse(touches[i].identifier).buttons[0] = true;
         }
         e.preventDefault();
     };
 
     var _onTouchUp = function(e) {
-        for (var i=0; i<e.changedTouches.length; i++) {
-            _mouseUpdate(e.changedTouches[i], i);
-            _this.getMouse(i).buttons[0] = false;
+        var touches = e.changedTouches;
+        for (var i=0; i<touches.length; i++) {
+            _mouseUpdate(touches[i], touches[i].identifier);
+            _this.getMouse(touches[i].identifier).buttons[0] = false;
         }
         e.preventDefault();
     };
@@ -90,7 +90,7 @@ var Mouse = function(dom) {
     this.getMouse = function(idx) {
         idx = idx || 0;
         if (idx >= _mouseStructs.length)
-            _mouseStructs.push(new MouseStruct());
+            _mouseStructs[idx] = new MouseStruct();
 
         return _mouseStructs[idx];
     };
@@ -105,4 +105,6 @@ var Mouse = function(dom) {
     dom.addEventListener("touchmove", _onTouchMove, false);
     dom.addEventListener("touchstart", _onTouchDown, false);
     dom.addEventListener("touchend", _onTouchUp, false);
+    dom.addEventListener("touchleave", _onTouchUp, false);
+    dom.addEventListener("touchcancel", _onTouchUp, false);
 };

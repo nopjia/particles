@@ -22,6 +22,14 @@ body {
   height: 100%;
 }
 
+#debug-box {
+  position:absolute;
+  bottom: 0;
+  color: #ffffff;
+  font-size: 32px;
+  line-height:100%;
+}
+
 .gradient-bg-cyan-black {
   /* IE10 Consumer Preview */
   background-image: -ms-linear-gradient(top, #005C7A 0%, #000000 100%);
