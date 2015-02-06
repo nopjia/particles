@@ -29,9 +29,6 @@ vec3 curlNoise(vec3 p);
 // PROGRAM
 //---------------------------------------------------------
 
-#define K_VEL_DECAY 0.99
-#define K_INPUT_ACCEL 2.0
-
 varying vec2 vUv;
 
 uniform sampler2D tPrev;
