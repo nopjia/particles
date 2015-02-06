@@ -1,6 +1,6 @@
 var App = function() {
 
-    var _SIM_SIZE = 128;
+    var _SIM_SIZE = 512;
 
     var _this = this;
 
@@ -73,6 +73,10 @@ var App = function() {
     var _sceneInit = function() {
         _simMat = createShaderMaterial(SimShader);
 
+        if (Utils.isMobile) {
+            _simMat.defines.MULTIPLE_INPUT = "";
+        }
+
         _initMat = createShaderMaterial(SimInitShader);
 
         _sim = new SimulationRenderer(
@@ -103,28 +107,42 @@ var App = function() {
         _controls.enabled = false;  // disable user input
 
         _raycaster = new THREE.Raycaster();
+
+        _debugBox = document.querySelector("#debug-box");
     };
 
     var _mouseUpdate = function() {
-        if (_mouse.getMouse().buttons[0]) {
-            _raycaster.setFromCamera(_mouse.getMouse().coords, _camera);
+        // _debugBox.innerHTML = "";
 
-            // from target point to camera
-            var pos = _controls.target;
-            var nor = pos.clone().sub(_camera.position).normalize();
-            var plane = new THREE.Plane(
-                nor, -nor.x*pos.x - nor.y*pos.y - nor.z*pos.z
-            );
+        var mIdMax = Utils.isMobile ? 4 : 1;
+        for (var mId=0; mId<mIdMax; mId++) {
+            var ms = _mouse.getMouse(mId);
+            if (ms.buttons[0]) {
+                _raycaster.setFromCamera(ms.coords, _camera);
 
-            // intersect plane
-            var point = _raycaster.ray.intersectPlane(plane);
+                // from target point to camera
+                var pos = _controls.target;
+                var nor = pos.clone().sub(_camera.position).normalize();
+                var plane = new THREE.Plane(
+                    nor, -nor.x*pos.x - nor.y*pos.y - nor.z*pos.z
+                );
 
-            _simMat.uniforms.uInputPos.value.copy(point);
-            _simMat.uniforms.uInputPosEnabled.value = 1;
+                // intersect plane
+                var point = _raycaster.ray.intersectPlane(plane);
+
+                _simMat.uniforms.uInputPos.value[mId].copy(point);
+                _simMat.uniforms.uInputPosFlag.value.setComponent(mId, 1);
+            }
+            else {
+                _simMat.uniforms.uInputPosFlag.value.setComponent(mId, 0);
+            }
         }
-        else {
-            _simMat.uniforms.uInputPosEnabled.value = 0;
-        }
+
+        // _debugBox.innerHTML +=
+        //     "<br>"+_simMat.uniforms.uInputPosFlag.value.x.toFixed(2)
+        //     +" "+_simMat.uniforms.uInputPosFlag.value.y.toFixed(2)
+        //     +" "+_simMat.uniforms.uInputPosFlag.value.z.toFixed(2)
+        //     +" "+_simMat.uniforms.uInputPosFlag.value.w.toFixed(2);
     };
 
     // INIT

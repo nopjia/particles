@@ -30,6 +30,7 @@ vec3 curlNoise(vec3 p);
 //---------------------------------------------------------
 
 #define K_VEL_DECAY 0.99
+#define K_INPUT_ACCEL 2.0
 
 varying vec2 vUv;
 
@@ -37,8 +38,8 @@ uniform sampler2D tPrev;
 uniform sampler2D tCurr;
 uniform float uDeltaT;
 uniform float uTime;
-uniform vec3 uInputPos;
-uniform int uInputPosEnabled;
+uniform vec3 uInputPos[4];
+uniform vec4 uInputPosFlag;
 
 void main() {
 
@@ -98,11 +99,15 @@ void main() {
     }
 
     // input pos
-    if (uInputPosEnabled > 0) {
-        vec3 toCenter = uInputPos - currPos;
-        float toCenterLength = length(toCenter);
-        accel += (toCenter/toCenterLength) * 2.0/toCenterLength;
-    }
+
+    #define PROCESS_INPUT_POS(FLAG, POS) if ((FLAG) > 0.0) { vec3 toCenter = (POS) - currPos; float toCenterLength = length(toCenter); accel += (toCenter/toCenterLength) * (FLAG)*K_INPUT_ACCEL/toCenterLength; }
+
+    PROCESS_INPUT_POS(uInputPosFlag.x, uInputPos[0]);
+    #ifdef MULTIPLE_INPUT
+        PROCESS_INPUT_POS(uInputPosFlag.y, uInputPos[1]);
+        PROCESS_INPUT_POS(uInputPosFlag.z, uInputPos[2]);
+        PROCESS_INPUT_POS(uInputPosFlag.w, uInputPos[3]);
+    #endif
 
     // state updates
     vel = K_VEL_DECAY * vel + accel * uDeltaT;
