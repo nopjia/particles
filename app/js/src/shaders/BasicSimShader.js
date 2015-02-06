@@ -1,4 +1,8 @@
-var SimShader = {
+var BasicSimShader = {
+
+    defines: {
+        "MULTIPLE_INPUT": Utils.isMobile ? "" : undefined
+    },
 
     uniforms: {
         "tPrev": { type: "t", value: null },
@@ -12,7 +16,7 @@ var SimShader = {
     vertexShader: ShaderChunks.basic_vertex,
 
     fragmentShader: Utils.loadTextFile(
-        "js/src/shaders/SimShader.fs.glsl"
+        "js/src/shaders/BasicSimShader.fs.glsl"
     )
 
 };

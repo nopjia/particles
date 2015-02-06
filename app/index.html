@@ -27,18 +27,50 @@
 <script type="text/javascript" src="js/src/UpdateLoop.js"></script>
 <script type="text/javascript" src="js/src/Utils.js"></script>
 <script type="text/javascript" src="js/src/Mouse.js"></script>
-<script type="text/javascript" src="js/src/SimulationRenderer.js"></script>
 <script type="text/javascript" src="js/src/ShaderPass.js"></script>
+<script type="text/javascript" src="js/src/SimulationRenderer.js"></script>
+<script type="text/javascript" src="js/src/ParticleSimulation.js"></script>
 
 <script type="text/javascript" src="js/src/shaders/ShaderChunks.js"></script>
 <script type="text/javascript" src="js/src/shaders/SimShader.js"></script>
 <script type="text/javascript" src="js/src/shaders/SimInitShader.js"></script>
 <script type="text/javascript" src="js/src/shaders/SimDebugShader.js"></script>
 <script type="text/javascript" src="js/src/shaders/ParticleShader.js"></script>
+<script type="text/javascript" src="js/src/shaders/BasicSimShader.js"></script>
+<script type="text/javascript" src="js/src/shaders/BasicParticleShader.js"></script>
 
 <script>
 (function(){
-    var app = new App();
+
+    var RoseGalaxy = function() {
+        this.size = 512;
+        this.simMat = createShaderMaterial(SimShader);
+        var _drawMat = this.drawMat = createShaderMaterial(ParticleShader);
+        _drawMat.uniforms.uColor.value = new THREE.Vector4(1.0, 0.5, 1.0, 0.2);
+        this.update = function(dt, t) {
+            _drawMat.uniforms.uTime.value = t;
+        };
+    };
+
+    var DefaultMobile = function() {
+        this.size = 128;
+        var _drawMat = this.drawMat = createShaderMaterial(BasicParticleShader);
+        _drawMat.defines.POINT_SIZE = "5.0";
+        var _color = new THREE.Color(1.0, 0.5, 0.3);
+        var _alpha = 0.3;
+        this.update = function(dt, t) {
+            _color.offsetHSL(0.1*dt, 0.0, 0.0);
+            _drawMat.uniforms.uColor.value.set(_color.r, _color.g, _color.b, _alpha);
+        };
+    };
+
+    var preset;
+    if (Utils.isMobile)
+        preset = DefaultMobile;
+    else
+        preset = RoseGalaxy;
+
+    var app = new App(new preset());
 })();
 </script>
 

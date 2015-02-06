@@ -1,4 +1,8 @@
-var ParticleShader = {
+var BasicParticleShader = {
+
+    defines: {
+        "POINT_SIZE": "1.0"
+    },
 
     uniforms: {
         "tPos": { type: "t", value: null },
@@ -7,11 +11,11 @@ var ParticleShader = {
     },
 
     vertexShader: Utils.loadTextFile(
-        "js/src/shaders/ParticleShader.vs.glsl"
+        "js/src/shaders/BasicParticleShader.vs.glsl"
     ),
 
     fragmentShader: Utils.loadTextFile(
-        "js/src/shaders/ParticleShader.fs.glsl"
+        "js/src/shaders/BasicParticleShader.fs.glsl"
     )
 
 };
