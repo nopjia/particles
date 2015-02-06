@@ -93,7 +93,7 @@ var App = function() {
         );
 
         _drawMat = createShaderMaterial(ParticleShader);
-        _drawMat.uniforms.uColor.value.set(1.0, 1.0, 1.0, 0.2);
+        _drawMat.uniforms.uColor.value.set(1.0, 0.5, 1.0, 0.2);
         _drawMat.blending = THREE.AdditiveBlending;
         _drawMat.transparent = true;
         _drawMat.depthTest = false;
@@ -152,6 +152,7 @@ var App = function() {
     };
 
     var _mobileUpdate = function(dt, t) {
+        if (!Utils.isMobile) return;
         _mobileColor.offsetHSL(0.1*dt, 0.0, 0.0);
         _drawMat.uniforms.uColor.value.set(_mobileColor.r, _mobileColor.g, _mobileColor.b, 0.3);
     };
