@@ -62,11 +62,28 @@
         };
     };
 
+    var Sphere = function() {
+        this.size = Utils.isMobile ? 128 : 512;
+        this.simMat = createShaderMaterial(SphereSimShader);
+        var _drawMat = this.drawMat = createShaderMaterial(Utils.isMobile ? BasicParticleShader : ParticleShader);
+        _drawMat.uniforms.uColor.value = new THREE.Vector4(1.0, 0.5, 1.0, 0.2);
+        this.update = Utils.isMobile ? undefined : function(dt, t) {
+            _drawMat.uniforms.uTime.value = t;
+        };
+    };
+
     var preset;
     if (Utils.isMobile)
         preset = DefaultMobile;
     else
         preset = RoseGalaxy;
+
+    var hashPresets = {
+        sphere: Sphere
+    };
+
+    var hashLookup = hashPresets[window.location.hash.substr(1)];
+    if (hashLookup) preset = hashLookup;
 
     var app = new App(new preset());
 })();
