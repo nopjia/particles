@@ -21,13 +21,15 @@ var SimulationRenderer = function(renderer, simMat, initMat, size) {
 
         if ( gl.getExtension( "OES_texture_float" ) === null ) {
             console.error("SimulationRenderer: OES_texture_float not supported.");
-            return;
+            return false;
         }
 
         if ( gl.getParameter( gl.MAX_VERTEX_TEXTURE_IMAGE_UNITS ) === 0 ) {
             console.error("SimulationRenderer: Vertex shader textures not supported.");
-            return;
+            return false;
         }
+
+        return true;
     };
 
     var _createTarget = function(s) {
@@ -126,7 +128,6 @@ var SimulationRenderer = function(renderer, simMat, initMat, size) {
     // _debugPass.material.uniforms.tTarget3.value = _target3;
 
     this.reset();   // reset targets
-
 };
 
 SimulationRenderer.prototype.constructor = SimulationRenderer;

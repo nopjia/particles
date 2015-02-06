@@ -1,6 +1,7 @@
 var App = function() {
 
     var _SIM_SIZE = 512;
+    var _SIM_SIZE_MOBILE = 128;
 
     var _this = this;
 
@@ -75,6 +76,7 @@ var App = function() {
 
         if (Utils.isMobile) {
             _simMat.defines.MULTIPLE_INPUT = "";
+            _SIM_SIZE = _SIM_SIZE_MOBILE;
         }
 
         _initMat = createShaderMaterial(SimInitShader);
