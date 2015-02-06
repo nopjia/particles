@@ -11,6 +11,10 @@ var SimShader = {
 
     vertexShader: ShaderChunks.basic_vertex,
 
-    fragmentShader: Utils.loadTextFile("js/src/shaders/SimShader.fs.glsl")
+    fragmentShader: Utils.loadTextFile(
+        Utils.isMobile ?
+        "js/src/shaders/SimShaderMobile.fs.glsl" :
+        "js/src/shaders/SimShader.fs.glsl"
+    )
 
 };

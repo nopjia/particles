@@ -6,8 +6,16 @@ var ParticleShader = {
         "uTime" : { type: "f", value: 0.0 },
     },
 
-    vertexShader: Utils.loadTextFile("js/src/shaders/ParticleShader.vs.glsl"),
+    vertexShader: Utils.loadTextFile(
+        Utils.isMobile ?
+        "js/src/shaders/ParticleShaderMobile.vs.glsl" :
+        "js/src/shaders/ParticleShader.vs.glsl"
+    ),
 
-    fragmentShader: Utils.loadTextFile("js/src/shaders/ParticleShader.fs.glsl")
+    fragmentShader: Utils.loadTextFile(
+        Utils.isMobile ?
+        "js/src/shaders/ParticleShaderMobile.fs.glsl" :
+        "js/src/shaders/ParticleShader.fs.glsl"
+    )
 
 };
