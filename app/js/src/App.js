@@ -1,11 +1,10 @@
 var App = function() {
 
     var _params, _gui, _guiFields;
+    var _currShape; // to display in GUI on init
 
-    // TODO_NOP: clean up this stuff, do this better
-    var _customSetup = {
-        basic: function() {}
-    };
+
+    // ENGINE PRESETS
 
     var BasicPreset = function() {
         this.size = Utils.isMobile ? 128 : 512;
@@ -28,38 +27,50 @@ var App = function() {
         };
     };
 
-    var _init = function() {
-        var routeName = window.location.hash.length > 0 ?
-            window.location.hash.substr(1) : "";
 
-        console.log("route: " + routeName);
+    // SHAPE PRESETS
 
-        // fix address bar
-        if (!_customSetup[routeName]) window.location.hash = "";
-
-        var preset = Utils.isMobile ? BasicPreset : Preset;
-
-        _params = window.params = new preset();
+    var _presetShapes = {
+        "plane": "SIM_PLANE",
+        "sphere": "SIM_SPHERE",
+        "galaxy": "SIM_ROSE_GALAXY",
+        "noise": "SIM_NOISE",
     };
 
     var _switchShape = function(name) {
-        delete _params.simMat.defines.SIM_PLANE;
-        delete _params.simMat.defines.SIM_SPHERE;
-        delete _params.simMat.defines.SIM_ROSE_GALAXY;
-        delete _params.simMat.defines.SIM_NOISE;
+        if (!_presetShapes[name]) return;
 
-        switch (name) {
-            case "plane":
-                _params.simMat.defines.SIM_PLANE = ""; break;
-            case "sphere":
-                _params.simMat.defines.SIM_SPHERE = ""; break;
-            case "galaxy":
-                _params.simMat.defines.SIM_ROSE_GALAXY = ""; break;
-            case "noise":
-                _params.simMat.defines.SIM_NOISE = ""; break;
-        }
+        Object.keys(_presetShapes).forEach(function(k) {
+            delete _params.simMat.defines[_presetShapes[k]];
+        });
+
+        _params.simMat.defines[_presetShapes[name]] = "";
 
         _params.simMat.needsUpdate = true;
+
+        _currShape = name;
+    };
+
+
+    // INIT FUNCTIONS
+
+    var _init = function() {
+        var preset = Utils.isMobile ? BasicPreset : Preset;
+        _params = window.params = new preset();
+
+        var routeName = window.location.hash.length > 0 ?
+            window.location.hash.substr(1) : "";
+        console.log("route: " + routeName);
+
+        _currShape = _presetShapes[routeName];
+
+        if (!_currShape) {
+            window.location.hash = "";  // fix address bar
+            _currShape = "galaxy";  // default shape
+        }
+        else {
+            _switchShape(routeName);
+        }
     };
 
     var _initUI = function() {
@@ -73,7 +84,7 @@ var App = function() {
             "point size": _params.drawMat.uniforms.uPointSize.value,
             "user gravity": _params.simMat.uniforms.uInputAccel.value,
             "shape gravity": _params.simMat.uniforms.uShapeAccel.value,
-            "shape": "galaxy"
+            "shape": _currShape
         };
 
         _gui.addColor(_guiFields, "color1").onChange(function(value) {
@@ -100,17 +111,18 @@ var App = function() {
         _gui.add(_guiFields, "point size", 1, 10).onChange(function(value) {
             _params.drawMat.uniforms.uPointSize.value = value;
         });
-        _gui.add(_guiFields, "user gravity", 0, 10).onFinishChange(function(value) {
+        _gui.add(_guiFields, "user gravity", 0, 10).onChange(function(value) {
             _params.simMat.uniforms.uInputAccel.value = value;
         });
-        _gui.add(_guiFields, "shape gravity", 0, 2).onFinishChange(function(value) {
+        _gui.add(_guiFields, "shape gravity", 0, 2).onChange(function(value) {
             _params.simMat.uniforms.uShapeAccel.value = value;
         });
-
-        _gui.add(_guiFields, "shape", ["none", "plane", "sphere", "galaxy", "noise"])
+        _gui.add(_guiFields, "shape", Object.keys(_presetShapes))
             .onFinishChange(_switchShape);
-
     };
+
+
+    // RUN PROGRAM
 
     _init();
 
