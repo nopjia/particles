@@ -1,17 +1,7 @@
-// require:
-// shaders/chunks/NoiseFuncs.glsl
-
-#define K_NOISE_ACCEL 0.05
-
 #ifdef SIM_ROSE_GALAXY
-
-float portionHaveTarget = 0.8;
-
-// target shape
-if (vUv.y < portionHaveTarget) {
-
+{
     // cylindrical coords
-    float radius = vUv.y / portionHaveTarget;
+    float radius = vUv.y;
     float theta = vUv.x * M_2PI;
 
     // outward spiral function
@@ -26,17 +16,4 @@ if (vUv.y < portionHaveTarget) {
     float toCenterLength = length(toCenter);
     accel += uShapeAccel * toCenter/toCenterLength;
 }
-
-// noise
-else {
-    float noiseTime = uTime;
-    accel += K_NOISE_ACCEL * curlNoise(currPos);// + vec3(sin(noiseTime), cos(noiseTime), sin(noiseTime)*cos(noiseTime)));
-}
-
-#endif
-
-#ifdef SIM_NOISE
-    //float noiseTime = uTime;
-    accel += K_NOISE_ACCEL * curlNoise(currPos);
-    // + vec3(sin(noiseTime), cos(noiseTime), sin(noiseTime)*cos(noiseTime)));
 #endif

@@ -37,8 +37,7 @@ void main() {
         sin(coords.y) * sin(coords.x)
     );
     vec3 pos = sphereCoords * rand(vUv);
-
     pos *= 5.0;
 
-    gl_FragColor = vec4(vec3(pos), 1.0);
+    gl_FragColor = vec4(pos, 1.0);
 }
