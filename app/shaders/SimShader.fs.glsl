@@ -11,6 +11,8 @@ uniform float uDeltaT;
 uniform float uTime;
 uniform vec3 uInputPos[4];
 uniform vec4 uInputPosFlag;
+uniform float uInputAccel;
+uniform float uShapeAccel;
 
 void main() {
 
@@ -23,12 +25,13 @@ void main() {
 
     vec3 accel = vec3(0.0);
 
-    #inject shaders/chunks/SimRoseGalaxy.glsl
+    #inject shaders/chunks/SimPlane.glsl
     #inject shaders/chunks/SimSphere.glsl
+    #inject shaders/chunks/SimRoseGalaxy.glsl
 
     // input pos
 
-    #define PROCESS_INPUT_POS(FLAG, POS) if ((FLAG) != 0.0) { vec3 toCenter = (POS)-currPos; float toCenterLength = length(toCenter); accel += (toCenter/toCenterLength) * (FLAG)*K_INPUT_ACCEL/toCenterLength; }
+    #define PROCESS_INPUT_POS(FLAG, POS) if ((FLAG) != 0.0) { vec3 toCenter = (POS)-currPos; float toCenterLength = length(toCenter); accel += (toCenter/toCenterLength) * (FLAG)*uInputAccel/toCenterLength; }
 
     PROCESS_INPUT_POS(uInputPosFlag.x, uInputPos[0]);
     #ifdef MULTIPLE_INPUT
