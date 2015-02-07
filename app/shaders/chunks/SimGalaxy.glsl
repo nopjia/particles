@@ -1,6 +1,10 @@
 // require:
 // shaders/chunks/NoiseFuncs.glsl
 
+#define K_NUM_ARMS 7.0
+#define K_HEIGHT 1.0
+#define K_SPIN_SPEED 0.25
+
 #define K_NOISE_ACCEL 0.1
 
 #ifdef SIM_GALAXY
@@ -15,12 +19,15 @@ float randVal = rand(vec2(theta, radius));
 radius += randVal * 0.5;
 theta += randVal * 0.5;
 
-float unitThickness = (rand(vec2(radius, theta))-0.5);
-float radialTaper = cos(radius*M_PI/2.0);
-float radialArms = sin(5.0*theta);
-float heightParam = 0.5 * unitThickness * radialTaper;
+float radialArms = sin(K_NUM_ARMS * theta);
 
-float spinParam = theta + radius*radius - uTime/4.0;
+float heightParam = K_HEIGHT                              // height constant
+                  * (rand(vec2(radius, theta))/2.0-0.5)   // provide unit thickness with rand
+                  * cos(radius*M_PI/2.0);                 // taper along radius using cosine curve
+
+float spinParam = theta                   // angle parameter
+                + radius*radius           // twist at rate r^2
+                - K_SPIN_SPEED * uTime;   // spin at constant speed
 
 vec3 targetPos = vec3(
     radius * sin(spinParam),
