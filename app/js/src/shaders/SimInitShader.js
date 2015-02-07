@@ -5,7 +5,7 @@ var SimInitShader = {
         "uColor": { type: "f", value: new THREE.Vector4(1.0, 1.0, 1.0, 1.0) }
     },
 
-    vertexShader: ShaderChunks.basic_vertex,
+    vertexShader: Utils.loadTextFile("js/src/shaders/Basic.vs.glsl"),
 
     fragmentShader: Utils.loadTextFile("js/src/shaders/SimInitShader.fs.glsl")
 

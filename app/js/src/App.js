@@ -20,6 +20,7 @@ var App = function(params) {
     _drawMat = params.drawMat || createShaderMaterial(BasicParticleShader);
     _customUpdate = params.update;
 
+
     // EVENTS
 
     var _onWindowResize = function() {
