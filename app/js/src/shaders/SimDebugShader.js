@@ -6,7 +6,7 @@ var SimDebugShader = {
         "tTarget3": { type: "t", value: null },
     },
 
-    vertexShader: Utils.loadTextFile("js/src/shaders/Basic.vs.glsl"),
+    vertexShader: Utils.loadTextFile("shaders/Basic.vs.glsl"),
 
     fragmentShader: [
         "varying vec2 vUv;",

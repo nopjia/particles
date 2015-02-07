@@ -24,10 +24,10 @@ var SimShader = {
         "uInputPosFlag": { type: "v4", value: new THREE.Vector4(0,0,0,0) },
     },
 
-    vertexShader: Utils.loadTextFile("js/src/shaders/Basic.vs.glsl"),
+    vertexShader: Utils.loadTextFile("shaders/Basic.vs.glsl"),
 
     fragmentShader: Utils.loadTextFile(
-        "js/src/shaders/SimShader.fs.glsl"
+        "shaders/SimShader.fs.glsl"
     )
 
 };
@@ -37,7 +37,7 @@ var BasicSimShader = {
     uniforms: SimShader.uniforms,
     vertexShader: SimShader.vertexShader,
     fragmentShader: Utils.loadTextFile(
-        "js/src/shaders/BasicSimShader.fs.glsl"
+        "shaders/BasicSimShader.fs.glsl"
     )
 };
 
@@ -46,6 +46,6 @@ var SphereSimShader = {
     uniforms: SimShader.uniforms,
     vertexShader: SimShader.vertexShader,
     fragmentShader: Utils.loadTextFile(
-        "js/src/shaders/SphereSimShader.fs.glsl"
+        "shaders/SphereSimShader.fs.glsl"
     )
 };
