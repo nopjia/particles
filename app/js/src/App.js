@@ -73,7 +73,7 @@ var App = function() {
             routeName = _DEFAULT_SHAPE;  // default shape
         }
 
-        _switchShape(routeName);
+        if (!Utils.isMobile) _switchShape(routeName);
     };
 
     var _initUI = function() {
@@ -129,7 +129,7 @@ var App = function() {
 
     _init();
 
-    !Utils.isMobile && _initUI();
+    if (!Utils.isMobile) _initUI();
 
     var engine = new ParticleEngine(_params);
 

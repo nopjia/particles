@@ -33,7 +33,7 @@ var ParticleEngine = function(params) {
         _mouseUpdate();
         _controls.update();
 
-        _customUpdate && _customUpdate(dt, t);
+        if(_customUpdate) _customUpdate(dt, t);
 
         _renderer.update(dt);
 
