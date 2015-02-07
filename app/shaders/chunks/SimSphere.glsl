@@ -18,7 +18,7 @@
     vec3 toCenter = targetPos - currPos;
     float toCenterLength = length(toCenter);
     if (!EQUALSZERO(toCenterLength))
-        accel += K_TARGET_ACCEL * toCenter/toCenterLength;
+        accel += uShapeAccel * toCenter/toCenterLength;
 }
 
 #endif

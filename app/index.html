@@ -30,6 +30,7 @@
 <script type="text/javascript" src="js/src/ShaderPass.js"></script>
 <script type="text/javascript" src="js/src/SimulationRenderer.js"></script>
 <script type="text/javascript" src="js/src/ParticleSimulation.js"></script>
+<script type="text/javascript" src="js/src/App.js"></script>
 
 <script type="text/javascript" src="js/src/shaders/SimShader.js"></script>
 <script type="text/javascript" src="js/src/shaders/SimInitShader.js"></script>
@@ -39,70 +40,8 @@
 <script>
 (function(){
 
-    var Basic = function() {
-        this.size = Utils.isMobile ? 128 : 512;
-        var _drawMat = this.drawMat = createShaderMaterial(BasicParticleShader);
-        var _color = new THREE.Color(1.0, 0.5, 0.3);
-        var _alpha = 0.3;
-        this.update = function(dt, t) {
-            _color.offsetHSL(0.1*dt, 0.0, 0.0);
-            _drawMat.uniforms.uColor.value.set(_color.r, _color.g, _color.b, _alpha);
-        };
-    };
+    var app = new App();
 
-    var RoseGalaxy = function() {
-        this.size = 512;
-        this.simMat = createShaderMaterial(SimShader);
-        this.simMat.defines.SIM_ROSE_GALAXY = "";
-        var _drawMat = this.drawMat = createShaderMaterial(ParticleShader);
-        _drawMat.uniforms.uColor.value = new THREE.Vector4(1.0, 0.5, 1.0, 0.2);
-        this.update = function(dt, t) {
-            _drawMat.uniforms.uTime.value = t;
-        };
-    };
-
-    var Sphere = function() {
-        this.size = Utils.isMobile ? 128 : 512;
-        this.simMat = createShaderMaterial(SimShader);
-        this.simMat.defines.SIM_SPHERE = "";
-        var _drawMat = this.drawMat = createShaderMaterial(Utils.isMobile ? BasicParticleShader : ParticleShader);
-        _drawMat.uniforms.uColor.value = new THREE.Vector4(1.0, 0.5, 1.0, 0.2);
-        this.update = Utils.isMobile ? undefined : function(dt, t) {
-            _drawMat.uniforms.uTime.value = t;
-        };
-    };
-
-    var hashPresets = {
-        "basic":  Basic,
-        "sphere": Sphere,
-    };
-
-    var getPreset = function() {
-        if (window.location.hash.length > 0)
-            return hashPresets[window.location.hash.substr(1)];
-    };
-
-    var preset = RoseGalaxy; // starting
-    if (getPreset()) {
-        preset = getPreset();
-    }
-    else {
-        window.location.hash = "";
-    }
-
-    if (Utils.isMobile)
-        preset = Basic;
-
-    window.onhashchange = function() {
-        if (getPreset())
-            window.location.reload();
-        else
-            window.location.hash = "";
-    };
-
-    var params = window.params = new preset();
-
-    var engine = new ParticleEngine(params);
 })();
 </script>
 
