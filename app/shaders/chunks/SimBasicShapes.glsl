@@ -61,7 +61,5 @@
 }
 
 #ifdef SIM_NOISE
-    //float noiseTime = uTime;
-    accel += 0.05 * curlNoise(currPos);
-    // + vec3(sin(noiseTime), cos(noiseTime), sin(noiseTime)*cos(noiseTime)));
+    accel += 0.2 * uShapeAccel * curlNoise(currPos);
 #endif
