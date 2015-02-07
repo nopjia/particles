@@ -31,9 +31,12 @@ var App = function() {
     // SHAPE PRESETS
 
     var _presetShapes = {
+        "none": "SIM_NO_SHAPE",
         "plane": "SIM_PLANE",
         "sphere": "SIM_SPHERE",
-        "galaxy": "SIM_ROSE_GALAXY",
+        "ball": "SIM_BALL",
+        "cube": "SIM_CUBE",
+        "petals": "SIM_ROSE_GALAXY",
         "noise": "SIM_NOISE",
     };
 
@@ -66,7 +69,7 @@ var App = function() {
 
         if (!_currShape) {
             window.location.hash = "";  // fix address bar
-            _currShape = "galaxy";  // default shape
+            _currShape = "petals";  // default shape
         }
         else {
             _switchShape(routeName);
@@ -102,7 +105,7 @@ var App = function() {
         _gui.add(_guiFields, "alpha", 0, 1).onChange(function(value) {
             _params.drawMat.uniforms.uAlpha.value = value;
         });
-        _gui.add(_guiFields, "color speed", 0, 10).onChange(function(value) {
+        _gui.add(_guiFields, "color speed", -10, 10).onChange(function(value) {
             _params.drawMat.uniforms.uColorSpeed.value = value;
         });
         _gui.add(_guiFields, "color freq", 0, 5).onChange(function(value) {
@@ -114,7 +117,7 @@ var App = function() {
         _gui.add(_guiFields, "user gravity", 0, 10).onChange(function(value) {
             _params.simMat.uniforms.uInputAccel.value = value;
         });
-        _gui.add(_guiFields, "shape gravity", 0, 2).onChange(function(value) {
+        _gui.add(_guiFields, "shape gravity", 0, 5).onChange(function(value) {
             _params.simMat.uniforms.uShapeAccel.value = value;
         });
         _gui.add(_guiFields, "shape", Object.keys(_presetShapes))
