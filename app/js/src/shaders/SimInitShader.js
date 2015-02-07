@@ -7,6 +7,6 @@ var SimInitShader = {
 
     vertexShader: Utils.loadTextFile("shaders/Basic.vs.glsl"),
 
-    fragmentShader: Utils.loadTextFile("shaders/SimInitShader.fs.glsl")
+    fragmentShader: Utils.loadTextFileInject("shaders/SimInitShader.fs.glsl")
 
 };

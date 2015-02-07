@@ -1,33 +1,5 @@
-//---------------------------------------------------------
-// MACROS
-//---------------------------------------------------------
+#inject shaders/chunks/Constants.glsl
 
-#define M_PI    3.14159265358979323846264338327950
-#define M_2PI   6.28318530717958647692528676655900
-#define M_PI2   1.57079632679489661923132169163975
-
-#define EQUALS(A,B) ( abs((A)-(B)) < EPS )
-#define EQUALSZERO(A) ( ((A)<EPS) && ((A)>-EPS) )
-
-
-//---------------------------------------------------------
-// UTILS
-//---------------------------------------------------------
-
-// source: http://stackoverflow.com/questions/4200224/random-noise-functions-for-glsl
-float rand(vec2 seed) {
-    return fract(sin(dot(seed.xy,vec2(12.9898,78.233))) * 43758.5453);
-}
-
-float snoise(vec2 v);
-float snoise(vec3 v);
-vec3 snoiseVec3(vec3 x);
-vec3 curlNoise(vec3 p);
-
-
-//---------------------------------------------------------
-// PROGRAM
-//---------------------------------------------------------
 
 varying vec2 vUv;
 
