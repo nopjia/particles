@@ -7,11 +7,11 @@ var ParticleShader = {
     },
 
     vertexShader: Utils.loadTextFile(
-        "js/src/shaders/ParticleShader.vs.glsl"
+        "shaders/ParticleShader.vs.glsl"
     ),
 
     fragmentShader: Utils.loadTextFile(
-        "js/src/shaders/ParticleShader.fs.glsl"
+        "shaders/ParticleShader.fs.glsl"
     )
 
 };
@@ -28,11 +28,11 @@ var BasicParticleShader = {
     },
 
     vertexShader: Utils.loadTextFile(
-        "js/src/shaders/BasicParticleShader.vs.glsl"
+        "shaders/BasicParticleShader.vs.glsl"
     ),
 
     fragmentShader: Utils.loadTextFile(
-        "js/src/shaders/BasicParticleShader.fs.glsl"
+        "shaders/BasicParticleShader.fs.glsl"
     )
 
 };
