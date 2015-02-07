@@ -1,4 +1,4 @@
-var App = function(params) {
+var ParticleEngine = function(params) {
 
     var _this = this;
 
@@ -131,5 +131,3 @@ var App = function(params) {
     _updateLoop.start();
 
 };
-
-App.prototype.constructor = App;
