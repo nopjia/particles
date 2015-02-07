@@ -24,7 +24,7 @@ var SimShader = {
         "uInputPosFlag": { type: "v4", value: new THREE.Vector4(0,0,0,0) },
     },
 
-    vertexShader: ShaderChunks.basic_vertex,
+    vertexShader: Utils.loadTextFile("js/src/shaders/Basic.vs.glsl"),
 
     fragmentShader: Utils.loadTextFile(
         "js/src/shaders/SimShader.fs.glsl"
