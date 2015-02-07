@@ -20,7 +20,6 @@ var App = function() {
     var Preset = function() {
         this.size = 512;
         this.simMat = createShaderMaterial(SimShader);
-        this.simMat.defines.SIM_ROSE_GALAXY = "";
         var _drawMat = this.drawMat = createShaderMaterial(ParticleShader);
         this.update = function(dt, t) {
             _drawMat.uniforms.uTime.value = t;
@@ -69,15 +68,12 @@ var App = function() {
             window.location.hash.substr(1) : "";
         console.log("route: " + routeName);
 
-        _currShape = _presetShapes[routeName];
-
-        if (!_currShape) {
+        if (!_presetShapes[routeName]) {
             window.location.hash = "";  // fix address bar
-            _currShape = _DEFAULT_SHAPE;  // default shape
+            routeName = _DEFAULT_SHAPE;  // default shape
         }
-        else {
-            _switchShape(routeName);
-        }
+
+        _switchShape(routeName);
     };
 
     var _initUI = function() {
