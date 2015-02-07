@@ -1,7 +1,6 @@
 var SimShader = {
 
     defines: {
-        "MULTIPLE_INPUT": Utils.isMobile ? "" : undefined,
         "K_VEL_DECAY": "0.99",
         "K_INPUT_ACCEL": "2.0",
         "K_TARGET_ACCEL": "0.2"
@@ -24,20 +23,13 @@ var SimShader = {
 
 };
 
+if (Utils.isMobile) SimShader.defines.MULTIPLE_INPUT = "";
+
 var BasicSimShader = {
     defines: SimShader.defines,
     uniforms: SimShader.uniforms,
     vertexShader: SimShader.vertexShader,
     fragmentShader: Utils.loadTextFile(
         "shaders/BasicSimShader.fs.glsl"
-    )
-};
-
-var SphereSimShader = {
-    defines: SimShader.defines,
-    uniforms: SimShader.uniforms,
-    vertexShader: SimShader.vertexShader,
-    fragmentShader: Utils.loadTextFileInject(
-        "shaders/SphereSimShader.fs.glsl"
     )
 };

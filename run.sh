@@ -1,1 +1,1 @@
-static app -H "{\"Cache-Control\": \"no-cache, must-revalidate\"}"
+static app -a 0.0.0.0 -H "{\"Cache-Control\": \"no-cache, must-revalidate\"}"
