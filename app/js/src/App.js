@@ -1,8 +1,8 @@
 var App = function() {
 
     var _params, _gui, _guiFields;
-    var _currShape; // to display in GUI on init
 
+    var _currShape; // to display in GUI on init
 
     // ENGINE PRESETS
 
@@ -30,13 +30,17 @@ var App = function() {
 
     // SHAPE PRESETS
 
+    var _DEFAULT_SHAPE = "galaxy";
+
     var _presetShapes = {
         "none": "SIM_NO_SHAPE",
         "plane": "SIM_PLANE",
+        "cube": "SIM_CUBE",
+        "disc": "SIM_DISC",
         "sphere": "SIM_SPHERE",
         "ball": "SIM_BALL",
-        "cube": "SIM_CUBE",
         "petals": "SIM_ROSE_GALAXY",
+        "galaxy": "SIM_GALAXY",
         "noise": "SIM_NOISE",
     };
 
@@ -69,7 +73,7 @@ var App = function() {
 
         if (!_currShape) {
             window.location.hash = "";  // fix address bar
-            _currShape = "petals";  // default shape
+            _currShape = _DEFAULT_SHAPE;  // default shape
         }
         else {
             _switchShape(routeName);

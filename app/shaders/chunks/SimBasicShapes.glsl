@@ -1,7 +1,24 @@
 {
 #ifdef SIM_PLANE
-    vec2 coords = vUv*2.0 - 1.0;
+    vec2 coords = vUv * 2.0 - 1.0;
     vec3 targetPos = vec3(coords.x, 0.0, coords.y);
+    targetPos *= 3.0;
+#endif
+
+#ifdef SIM_CUBE
+    vec3 targetPos = vec3(vUv.x, vUv.y, rand(vUv)) * 2.0 - 1.0;
+    targetPos *= 2.0;
+#endif
+
+#ifdef SIM_DISC
+    // cylindrical coords
+    float radius = vUv.y;
+    float theta = vUv.x * M_2PI;
+    vec3 targetPos = vec3(
+        radius * sin(theta),
+        0.0,
+        radius * cos(theta)
+    );
     targetPos *= 3.0;
 #endif
 
@@ -35,15 +52,16 @@
     targetPos *= 2.0;
 #endif
 
-#ifdef SIM_CUBE
-    vec3 targetPos = vec3(vUv.x, vUv.y, rand(vUv)) * 2.0 - 1.0;
-    targetPos *= 2.0;
-#endif
-
-#if defined(SIM_PLANE) || defined(SIM_SPHERE) || defined(SIM_BALL) || defined(SIM_CUBE)
+#if defined(SIM_PLANE) || defined(SIM_SPHERE) || defined(SIM_BALL) || defined(SIM_CUBE) || defined(SIM_DISC)
     vec3 toCenter = targetPos - currPos;
     float toCenterLength = length(toCenter);
     if (!EQUALSZERO(toCenterLength))
         accel += uShapeAccel * toCenter/toCenterLength;
 #endif
 }
+
+#ifdef SIM_NOISE
+    //float noiseTime = uTime;
+    accel += 0.05 * curlNoise(currPos);
+    // + vec3(sin(noiseTime), cos(noiseTime), sin(noiseTime)*cos(noiseTime)));
+#endif

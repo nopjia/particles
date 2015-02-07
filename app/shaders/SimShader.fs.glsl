@@ -27,6 +27,7 @@ void main() {
 
     #inject shaders/chunks/SimBasicShapes.glsl
     #inject shaders/chunks/SimRoseGalaxy.glsl
+    #inject shaders/chunks/SimGalaxy.glsl
 
     // input pos
 
