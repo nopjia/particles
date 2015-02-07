@@ -1,8 +1,9 @@
 var App = function() {
 
-    var _params, _gui, _guiFields;
+    var _params, _gui, _guiFields, _engine;
 
     var _currShape; // to display in GUI on init
+
 
     // ENGINE PRESETS
 
@@ -87,7 +88,8 @@ var App = function() {
             "point size": _params.drawMat.uniforms.uPointSize.value,
             "user gravity": _params.simMat.uniforms.uInputAccel.value,
             "shape gravity": _params.simMat.uniforms.uShapeAccel.value,
-            "shape": _currShape
+            "shape": _currShape,
+            "paused": false,
         };
 
         _gui.addColor(_guiFields, "color1").onChange(function(value) {
@@ -122,6 +124,19 @@ var App = function() {
         });
         _gui.add(_guiFields, "shape", Object.keys(_presetShapes))
             .onFinishChange(_switchShape);
+        _gui.add(_guiFields, "paused").onChange(function(value) {
+            _engine.pauseSimulation(value);
+        }).listen();
+    };
+
+    var _initKeyboard = function() {
+
+        // pause simulation
+        Mousetrap.bind("space", function() {
+            _guiFields.paused = !_guiFields.paused;
+            _engine.pauseSimulation(_guiFields.paused);
+        });
+
     };
 
 
@@ -129,8 +144,10 @@ var App = function() {
 
     _init();
 
-    if (!Utils.isMobile) _initUI();
+    if (!Utils.isMobile) {
+        _initUI();
+        _initKeyboard();
+    }
 
-    var engine = new ParticleEngine(_params);
-
+    _engine = new ParticleEngine(_params);
 };
