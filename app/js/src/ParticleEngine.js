@@ -9,6 +9,7 @@ var ParticleEngine = function(params) {
     var _mouse;
     var _controls, _raycaster;
     var _customUpdate;
+    var _pauseSim = false;
 
 
     // PARAMS
@@ -41,7 +42,7 @@ var ParticleEngine = function(params) {
     };
 
     var _onFixedUpdate = function(dt, t) {
-        _sim.update(dt, t);
+        if (!_pauseSim) _sim.update(dt, t);
     };
 
 
@@ -121,6 +122,14 @@ var ParticleEngine = function(params) {
         //     +" "+_simMat.uniforms.uInputPosFlag.value.w.toFixed(2);
     };
 
+
+    // PUBLIC FUNCTIONS
+
+    this.pauseSimulation = function(value) {
+        _pauseSim = value;
+    };
+
+
     // INIT
     _init();
 
@@ -129,5 +138,4 @@ var ParticleEngine = function(params) {
 
     // RUN
     _updateLoop.start();
-
 };
