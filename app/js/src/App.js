@@ -90,6 +90,7 @@ var App = function() {
             "shape gravity": _params.simMat.uniforms.uShapeAccel.value,
             "shape": _currShape,
             "paused": false,
+            "rotate": true,
         };
 
         _gui.addColor(_guiFields, "color1").onChange(function(value) {
@@ -127,6 +128,9 @@ var App = function() {
         _gui.add(_guiFields, "paused").onChange(function(value) {
             _engine.pauseSimulation(value);
         }).listen();
+        _gui.add(_guiFields, "rotate").onChange(function(value) {
+            _engine.setAutoRotate(value);
+        });
     };
 
     var _initKeyboard = function() {

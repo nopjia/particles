@@ -129,6 +129,10 @@ var ParticleEngine = function(params) {
         _pauseSim = value;
     };
 
+    this.setAutoRotate = function(value) {
+        _controls.autoRotate = value;
+    };
+
 
     // INIT
     _init();
