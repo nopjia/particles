@@ -25,8 +25,7 @@ void main() {
 
     vec3 accel = vec3(0.0);
 
-    #inject shaders/chunks/SimPlane.glsl
-    #inject shaders/chunks/SimSphere.glsl
+    #inject shaders/chunks/SimBasicShapes.glsl
     #inject shaders/chunks/SimRoseGalaxy.glsl
 
     // input pos
