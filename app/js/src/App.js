@@ -62,7 +62,8 @@ var App = function() {
     // FUNCTIONS
 
     var _takeScreenshot = function() {
-        _engine.renderer.getImageData(function(url) {
+        _engine.renderer.getImageData(function(dataUrl) {
+            var url = Utils.dataUrlToBlobUrl(dataUrl);
             Utils.openUrlInNewWindow(url, window.innerWidth, window.innerHeight);
         });
     };
