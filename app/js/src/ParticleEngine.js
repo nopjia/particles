@@ -31,8 +31,10 @@ var ParticleEngine = function(params) {
     var _onFrameUpdate = function(dt, t) {
         _stats.begin();
 
-        _mouseUpdate();
-        _controls.update();
+        if (!_controls.enabled) {
+            _mouseUpdate();
+            _controls.update();
+        }
 
         if(_customUpdate) _customUpdate(dt, t);
 
@@ -129,8 +131,12 @@ var ParticleEngine = function(params) {
         _pauseSim = value;
     };
 
-    this.setAutoRotate = function(value) {
+    this.enableCameraAutoRotate = function(value) {
         _controls.autoRotate = value;
+    };
+
+    this.enableCameraControl = function(value) {
+        _controls.enabled = value;
     };
 
 
