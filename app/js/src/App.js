@@ -90,7 +90,8 @@ var App = function() {
             "shape gravity": _params.simMat.uniforms.uShapeAccel.value,
             "shape": _currShape,
             "paused": false,
-            "rotate": true,
+            "camera rotate": true,
+            "camera control": false,
         };
 
         _gui.addColor(_guiFields, "color1").onChange(function(value) {
@@ -128,9 +129,12 @@ var App = function() {
         _gui.add(_guiFields, "paused").onChange(function(value) {
             _engine.pauseSimulation(value);
         }).listen();
-        _gui.add(_guiFields, "rotate").onChange(function(value) {
-            _engine.setAutoRotate(value);
+        _gui.add(_guiFields, "camera rotate").onChange(function(value) {
+            _engine.enableAutoRotate(value);
         });
+        _gui.add(_guiFields, "camera control").onChange(function(value) {
+            _engine.enableCameraControl(value);
+        }).listen();
     };
 
     var _initKeyboard = function() {
@@ -139,7 +143,20 @@ var App = function() {
         Mousetrap.bind("space", function() {
             _guiFields.paused = !_guiFields.paused;
             _engine.pauseSimulation(_guiFields.paused);
+            return false;
         });
+
+        // mouse camera control
+        Mousetrap.bind(["alt", "option"], function() {
+            _guiFields["camera control"] = true;
+            _engine.enableCameraControl(true);
+            return false;
+        }, "keydown");
+        Mousetrap.bind(["alt", "option"], function() {
+            _guiFields["camera control"] = false;
+            _engine.enableCameraControl(false);
+            return false;
+        }, "keyup");
 
     };
 
