@@ -58,3 +58,8 @@ Utils.loadTextFileInject = function(url) {
 
     return fileStr;
 };
+
+Utils.openUrlInNewWindow = function(url, width, height) {
+    window.open(url, "Screenshot",
+        "width="+width+" height="+height+" scrollbars=no, resizable=yes");
+};

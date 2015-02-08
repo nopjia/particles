@@ -14,6 +14,12 @@ var RenderContext = function(canvas) {
 
     var _updateFuncs = [];
 
+    var _imgData = {
+        pending: false,
+        callback: undefined,
+        dataUrl: undefined
+    };
+
     // HARDCODE PARAMS
 
     var _rendererParams = {
@@ -106,6 +112,12 @@ var RenderContext = function(canvas) {
             _updateFuncs[i](dt);
 
         _renderer.render(_scene, _camera);
+
+        if (_imgData.pending) {
+            _imgData.dataUrl = _renderer.domElement.toDataURL();
+            _imgData.pending = false;
+            if(_imgData.callback) _imgData.callback(_imgData.dataUrl);
+        }
     };
 
     this.customInit = function() {
@@ -127,6 +139,11 @@ var RenderContext = function(canvas) {
 
     this.getCamera = function() {
         return _camera;
+    };
+
+    this.getImageData = function(cb) {
+        _imgData.pending = true;
+        _imgData.callback = cb;
     };
 
 };

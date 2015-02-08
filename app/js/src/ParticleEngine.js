@@ -141,11 +141,15 @@ var ParticleEngine = function(params) {
 
 
     // INIT
+
     _init();
 
-    // AUTHOR INIT
     _sceneInit();
 
-    // RUN
+    // expose variables
+    this.renderer = _renderer;
+    this.scene = _scene;
+    this.camera = _camera;
+
     _updateLoop.start();
 };

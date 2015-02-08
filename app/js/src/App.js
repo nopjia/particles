@@ -59,6 +59,15 @@ var App = function() {
     };
 
 
+    // FUNCTIONS
+
+    var _takeScreenshot = function() {
+        _engine.renderer.getImageData(function(url) {
+            Utils.openUrlInNewWindow(url, window.innerWidth, window.innerHeight);
+        });
+    };
+
+
     // INIT FUNCTIONS
 
     var _init = function() {
@@ -92,6 +101,7 @@ var App = function() {
             "paused": false,
             "camera rotate": true,
             "camera control": false,
+            "screenshot": _takeScreenshot,
         };
 
         _gui.addColor(_guiFields, "color1").onChange(function(value) {
@@ -135,6 +145,7 @@ var App = function() {
         _gui.add(_guiFields, "camera control").onChange(function(value) {
             _engine.enableCameraControl(value);
         }).listen();
+        _gui.add(_guiFields, "screenshot");
     };
 
     var _initKeyboard = function() {
