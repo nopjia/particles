@@ -36,19 +36,19 @@ var Mouse = function(dom) {
 
     var _onMouseMove = function(e) {
         _mouseUpdate(e);
-        e.preventDefault();
+        // e.preventDefault();
     };
 
     var _onMouseDown = function(e) {
         _mouseUpdate(e);
         _this.getMouse().buttons[e.button] = true;
-        e.preventDefault();
+        // e.preventDefault();
     };
 
     var _onMouseUp = function(e) {
         _mouseUpdate(e);
         _this.getMouse().buttons[e.button] = false;
-        e.preventDefault();
+        // e.preventDefault();
     };
 
 

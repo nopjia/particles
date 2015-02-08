@@ -130,7 +130,7 @@ var App = function() {
             _engine.pauseSimulation(value);
         }).listen();
         _gui.add(_guiFields, "camera rotate").onChange(function(value) {
-            _engine.enableAutoRotate(value);
+            _engine.enableCameraAutoRotate(value);
         });
         _gui.add(_guiFields, "camera control").onChange(function(value) {
             _engine.enableCameraControl(value);
