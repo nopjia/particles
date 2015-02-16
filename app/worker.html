@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Worker Test</title>
+</head>
+<body>
+</body>
+
+<script type="text/javascript" src="js/lib/three70.js"></script>
+<script type="text/javascript" src="js/lib/CopyShader.js"></script>
+<script type="text/javascript" src="js/src/ShaderPass.js"></script>
+<script type="text/javascript">
+
+var worker = new Worker("js/src/worker.js");
+worker.onmessage = function(e) {
+    console.log(e);
+
+    var texture = new THREE.DataTexture(
+        e.data.data, e.data.size, e.data.size,
+        THREE.RGBAFormat,
+        THREE.FloatType
+    );
+    texture.needsUpdate = true;
+
+    pass.material.uniforms.tDiffuse.value = texture;
+    pass.render(renderer);
+};
+
+var renderer = new THREE.WebGLRenderer();
+renderer.setSize( window.innerWidth, window.innerHeight );
+document.body.appendChild( renderer.domElement );
+
+var pass = new ShaderPass(THREE.CopyShader);
+
+</script>
+
+</html>
