@@ -7,9 +7,6 @@ var MapRasterizer = function() {
     }
 
     function _setData(x, y, r, g, b, a) {
-        if (x < 0) debugger;
-        if (y < 0) debugger;
-
         var idx = (x + y*_size) * 4;
         _data[idx    ] = r;
         _data[idx + 1] = g;
@@ -25,8 +22,10 @@ var MapRasterizer = function() {
             x2 = tmpX;
         }
         for (var x=x1; x<=x2; x++) {
-            _setData(x, y, 1.0, 0.0, 0.0, 1.0);     // TODO_NOP: int rounding
+            _setData(x, y, 1.0, 0.0, 0.0, 1.0);     // TODO_NOP: check int rounding
         }
+        _setData(x1, y, 1.0, 1.0, 1.0, 1.0);
+        _setData(x2, y, 1.0, 1.0, 1.0, 1.0);
     };
 
     var _fillFlatTriangle = function(v1, v2, v3) {
@@ -37,7 +36,7 @@ var MapRasterizer = function() {
         var curx2 = v1.x;
 
         for (var scanlineY = v1.y; scanlineY <= v2.y; scanlineY++) {
-            _fillScanLine(curx1, curx2, scanlineY);
+            _fillScanLine(Math.round(curx1), Math.round(curx2), scanlineY);
             curx1 += invslope1;
             curx2 += invslope2;
         }
