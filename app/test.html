@@ -12,6 +12,7 @@
 <script type="text/javascript" src="js/lib/OBJLoader.js"></script>
 <script type="text/javascript" src="js/src/Utils.js"></script>
 <script type="text/javascript" src="js/src/ShaderPass.js"></script>
+<script type="text/javascript" src="js/src/UVMapper.js"></script>
 <script type="text/javascript" src="js/src/shaders/UVMapShader.js"></script>
 
 <script type="text/javascript">
@@ -31,8 +32,6 @@ var camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeigh
 camera.position.z = 5;
 
 var material = new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe: true } );
-var shaderMat = createShaderMaterial(UVMapShader);
-
 // scene.add(new THREE.Mesh(
 //     new THREE.SphereGeometry(1),
 //     shaderMat
@@ -43,12 +42,14 @@ var shaderMat = createShaderMaterial(UVMapShader);
 var url = "obj/suzanne.obj";
 var loader = new THREE.OBJLoader();
 loader.load(url, function (object) {
-    var geo = object.children[0].geometry;
+    var mesh = object.children[0];
 
-    var newScene = new THREE.Scene();
-    newScene.add(new THREE.Mesh(geo, shaderMat));
-    renderer.clear();
-    renderer.render(newScene, camera);
+    var mapper = new UVMapper(renderer);
+    var target = mapper.getMap(mesh, 32);
+
+    var copyPass = new ShaderPass(THREE.CopyShader);
+    copyPass.material.uniforms.tDiffuse.value = target;
+    copyPass.render(renderer);
 });
 
 </script>
