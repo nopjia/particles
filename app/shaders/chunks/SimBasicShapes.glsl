@@ -53,10 +53,10 @@
 #endif
 
 #if defined(SIM_PLANE) || defined(SIM_SPHERE) || defined(SIM_BALL) || defined(SIM_CUBE) || defined(SIM_DISC)
-    vec3 toCenter = targetPos - currPos;
-    float toCenterLength = length(toCenter);
-    if (!EQUALSZERO(toCenterLength))
-        accel += uShapeAccel * toCenter/toCenterLength;
+    vec3 toTarget = targetPos - currPos;
+    float toTargetLength = length(toTarget);
+    if (!EQUALSZERO(toTargetLength))
+        accel += uShapeAccel * toTarget/toTargetLength;
 #endif
 }
 

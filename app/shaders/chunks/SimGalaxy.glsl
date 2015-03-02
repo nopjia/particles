@@ -1,6 +1,3 @@
-// require:
-// shaders/chunks/NoiseFuncs.glsl
-
 #define K_NUM_ARMS 7.0
 #define K_HEIGHT 0.5
 #define K_SPIN_SPEED 0.25
@@ -38,9 +35,9 @@ vec3 targetPos = vec3(
 );
 targetPos *= 3.0;
 
-vec3 toCenter = targetPos - currPos;
-float toCenterLength = length(toCenter);
-accel += uShapeAccel * toCenter/toCenterLength
+vec3 toTarget = targetPos - currPos;
+float toTargetLength = length(toTarget);
+accel += uShapeAccel * toTarget/toTargetLength
     * (radialArms/2.0+0.5)  // gravity stronger in arms
     * randVal;    // randomize gravity prevents banding
 

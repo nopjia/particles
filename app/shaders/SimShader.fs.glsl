@@ -14,6 +14,10 @@ uniform vec4 uInputPosFlag;
 uniform float uInputAccel;
 uniform float uShapeAccel;
 
+#ifdef SIM_TEXTURE
+uniform sampler2D tTarget;
+#endif
+
 void main() {
 
     // read data
@@ -28,6 +32,7 @@ void main() {
     #inject shaders/chunks/SimBasicShapes.glsl
     #inject shaders/chunks/SimRoseGalaxy.glsl
     #inject shaders/chunks/SimGalaxy.glsl
+    #inject shaders/chunks/SimTextureTarget.glsl
 
     // input pos
 

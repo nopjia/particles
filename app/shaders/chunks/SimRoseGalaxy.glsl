@@ -12,8 +12,8 @@
         radius * cos(theta)
     );
 
-    vec3 toCenter = targetPos - currPos;
-    float toCenterLength = length(toCenter);
-    accel += uShapeAccel * toCenter/toCenterLength;
+    vec3 toTarget = targetPos - currPos;
+    float toTargetLength = length(toTarget);
+    accel += uShapeAccel * toTarget/toTargetLength;
 }
 #endif

@@ -42,6 +42,7 @@ var App = function() {
         "petals": "SIM_ROSE_GALAXY",
         "galaxy": "SIM_GALAXY",
         "noise": "SIM_NOISE",
+        "object": "SIM_TEXTURE",
     };
 
     var _switchShape = function(name) {
@@ -176,6 +177,19 @@ var App = function() {
     // RUN PROGRAM
 
     _init();
+
+    // TODO_NOP TEST
+    _params.simMat.uniforms.tTarget = { type: "t", value: null };
+    var url = "obj/suzanne.obj";
+    var loader = new THREE.OBJLoader();
+    loader.load(url, function (object) {
+        var mesh = object.children[0];
+
+        var mapper = new UVMapper(_engine.renderer.getRenderer());
+        var target = mapper.getMap(mesh, 512);
+
+        _params.simMat.uniforms.tTarget.value = target;
+    });
 
     if (!Utils.isMobile) {
         _initUI();

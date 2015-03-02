@@ -17,6 +17,7 @@ var UVMapper = function(renderer) {
             minFilter: THREE.LinearFilter,
             magFilter: THREE.LinearFilter,
             format: THREE.RGBAFormat,
+            type: THREE.FloatType,
             depthBuffer: false,
             stencilBuffer: false
         });
