@@ -25,4 +25,10 @@ var UVMapper = function(renderer) {
 
         return target;
     };
+
+    this.createMap = function(mesh, size) {
+        var target = this.createTarget(size);
+        this.render(mesh, target);
+        return target;
+    };
 };

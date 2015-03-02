@@ -39,13 +39,13 @@ var material = new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe: true }
 // renderer.clear();
 // renderer.render(scene, camera);
 
-var url = "obj/suzanne.obj";
+var url = "obj/spot.obj";
 var loader = new THREE.OBJLoader();
 loader.load(url, function (object) {
     var mesh = object.children[0];
 
     var mapper = new UVMapper(renderer);
-    var target = mapper.getMap(mesh, 32);
+    var target = mapper.createMap(mesh, 256);
 
     var copyPass = new ShaderPass(THREE.CopyShader);
     copyPass.material.uniforms.tDiffuse.value = target;
