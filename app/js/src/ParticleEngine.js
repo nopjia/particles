@@ -127,6 +127,14 @@ var ParticleEngine = function(params) {
 
     // PUBLIC FUNCTIONS
 
+    this.start = function() {
+        _updateLoop.start();
+    };
+
+    this.stop = function() {
+        _updateLoop.stop();
+    };
+
     this.pauseSimulation = function(value) {
         _pauseSim = value;
     };
@@ -150,6 +158,4 @@ var ParticleEngine = function(params) {
     this.renderer = _renderer;
     this.scene = _scene;
     this.camera = _camera;
-
-    _updateLoop.start();
 };

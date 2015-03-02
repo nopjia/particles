@@ -5,14 +5,14 @@ var UVMapper = function(renderer) {
     var _scene  = new THREE.Scene();
     _scene.overrideMaterial = createShaderMaterial(UVMapShader);
 
-    this.renderMap = function(mesh, target) {
+    this.render = function(mesh, target) {
         // might need to make geo, so don't steal from its original parent
         _scene.add(mesh);
         _renderer.render(_scene, _camera, target);
         _scene.remove(mesh);
     };
 
-    this.getMap = function(mesh, size) {
+    this.createTarget = function(size) {
         var target = new THREE.WebGLRenderTarget(size, size, {
             minFilter: THREE.LinearFilter,
             magFilter: THREE.LinearFilter,
@@ -22,8 +22,6 @@ var UVMapper = function(renderer) {
             stencilBuffer: false
         });
         target.generateMipmaps = false;
-
-        this.renderMap(mesh, target);
 
         return target;
     };

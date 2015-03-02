@@ -1,6 +1,7 @@
 var App = function() {
 
     var _params, _gui, _guiFields, _engine;
+    var _mapper, _mapTarget;
 
     var _currShape; // to display in GUI on init
 
@@ -73,9 +74,11 @@ var App = function() {
     // INIT FUNCTIONS
 
     var _init = function() {
+        // choose preset
         var preset = Utils.isMobile ? BasicPreset : Preset;
-        _params = window.params = new preset();
+        _params = new preset();
 
+        // routing, configure params
         var routeName = window.location.hash.length > 0 ?
             window.location.hash.substr(1) : "";
         console.log("route: " + routeName);
@@ -86,6 +89,13 @@ var App = function() {
         }
 
         if (!Utils.isMobile) _switchShape(routeName);
+
+        // init engine, with params
+        _engine = new ParticleEngine(_params);
+
+        // init mapping
+        _mapper = new UVMapper(_engine.renderer.getRenderer());
+        _mapTarget = _mapper.createTarget(_params.size);
     };
 
     var _initUI = function() {
@@ -184,11 +194,9 @@ var App = function() {
     var loader = new THREE.OBJLoader();
     loader.load(url, function (object) {
         var mesh = object.children[0];
-
-        var mapper = new UVMapper(_engine.renderer.getRenderer());
-        var target = mapper.getMap(mesh, 512);
-
-        _params.simMat.uniforms.tTarget.value = target;
+        mesh.scale.multiplyScalar(2.0);
+        _mapper.render(mesh, _mapTarget);
+        _params.simMat.uniforms.tTarget.value = _mapTarget;
     });
 
     if (!Utils.isMobile) {
@@ -196,5 +204,5 @@ var App = function() {
         _initKeyboard();
     }
 
-    _engine = new ParticleEngine(_params);
+    _engine.start();
 };

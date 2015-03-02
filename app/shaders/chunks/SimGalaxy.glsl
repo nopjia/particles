@@ -1,10 +1,11 @@
+{
+#ifdef SIM_GALAXY
+
 #define K_NUM_ARMS 7.0
 #define K_HEIGHT 0.5
 #define K_SPIN_SPEED 0.25
 
 #define K_NOISE_ACCEL 0.1
-
-#ifdef SIM_GALAXY
 
 // cylindrical coords
 float radius = vUv.y;
@@ -47,3 +48,4 @@ float noiseTime = uTime;
 accel += K_NOISE_ACCEL * curlNoise(currPos);// + vec3(sin(noiseTime), cos(noiseTime), sin(noiseTime)*cos(noiseTime)));
 
 #endif
+}
