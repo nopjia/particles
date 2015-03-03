@@ -2,6 +2,7 @@ var App = function() {
 
     var _params, _gui, _guiFields, _engine;
     var _mapper, _mapTarget;
+    var _customUpdate;
 
     var _currShape; // to display in GUI on init
 
@@ -24,7 +25,8 @@ var App = function() {
         this.simMat = createShaderMaterial(SimShader);
         var _drawMat = this.drawMat = createShaderMaterial(ParticleShader);
         this.update = function(dt, t) {
-            _drawMat.uniforms.uTime.value = t;
+            _drawMat.uniforms.uTime.value = t;  // for ParticleShader.vs
+            if (_customUpdate) _customUpdate(dt, t);
         };
     };
 
@@ -34,15 +36,15 @@ var App = function() {
     var _DEFAULT_SHAPE = "galaxy";
 
     var _presetShapes = {
-        "none": "SIM_NO_SHAPE",
-        "plane": "SIM_PLANE",
-        "cube": "SIM_CUBE",
-        "disc": "SIM_DISC",
+        "none":   "SIM_NO_SHAPE",
+        "plane":  "SIM_PLANE",
+        "cube":   "SIM_CUBE",
+        "disc":   "SIM_DISC",
         "sphere": "SIM_SPHERE",
-        "ball": "SIM_BALL",
+        "ball":   "SIM_BALL",
         "petals": "SIM_ROSE_GALAXY",
         "galaxy": "SIM_GALAXY",
-        "noise": "SIM_NOISE",
+        "noise":  "SIM_NOISE",
         "object": "SIM_TEXTURE",
     };
 

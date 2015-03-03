@@ -3,7 +3,12 @@ var UVMapper = function(renderer) {
 
     var _camera = new THREE.OrthographicCamera( -1, 1, 1, -1, 0, 1 );   // not really used
     var _scene  = new THREE.Scene();
-    _scene.overrideMaterial = createShaderMaterial(UVMapShader);
+
+    var _mat = createShaderMaterial(UVMapShader);
+    _mat.blending = THREE.NoBlending;
+    _mat.depthTest = false;
+    _mat.depthWrite = false;
+    _scene.overrideMaterial = _mat;
 
     this.render = function(mesh, target) {
         // might need to make geo, so don't steal from its original parent

@@ -83,6 +83,7 @@ var ParticleEngine = function(params) {
         _controls.rotateUp(Math.PI/6);
         _controls.autoRotate = true;
         _controls.autoRotateSpeed = 1.0;
+        _controls.noPan = true;
         _controls.enabled = false;  // disable user input
 
         _raycaster = new THREE.Raycaster();
