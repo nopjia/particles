@@ -190,20 +190,20 @@ var App = function() {
 
     _init();
 
-    // TODO_NOP TEST
-    _params.simMat.uniforms.tTarget = { type: "t", value: null };
-    var url = "obj/suzanne.obj";
-    var loader = new THREE.OBJLoader();
-    loader.load(url, function (object) {
-        var mesh = object.children[0];
-        mesh.scale.multiplyScalar(2.0);
-        _mapper.render(mesh, _mapTarget);
-        _params.simMat.uniforms.tTarget.value = _mapTarget;
-    });
-
     if (!Utils.isMobile) {
         _initUI();
         _initKeyboard();
+
+        // TODO_NOP TEST
+        _params.simMat.uniforms.tTarget = { type: "t", value: null };
+        var url = "obj/suzanne.obj";
+        var loader = new THREE.OBJLoader();
+        loader.load(url, function (object) {
+            var mesh = object.children[0];
+            mesh.scale.multiplyScalar(2.0);
+            _mapper.render(mesh, _mapTarget);
+            _params.simMat.uniforms.tTarget.value = _mapTarget;
+        });
     }
 
     _engine.start();
