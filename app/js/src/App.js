@@ -1,7 +1,6 @@
 var App = function() {
 
     var _params, _gui, _guiFields, _engine;
-    var _mapper, _mapTarget;
     var _customUpdate;
 
     var _currShape; // to display in GUI on init
@@ -94,10 +93,6 @@ var App = function() {
 
         // init engine, with params
         _engine = new ParticleEngine(_params);
-
-        // init mapping
-        _mapper = new UVMapper(_engine.renderer.getRenderer());
-        _mapTarget = _mapper.createTarget(_params.size);
     };
 
     var _initUI = function() {
@@ -196,14 +191,10 @@ var App = function() {
 
         // TODO_NOP TEST
         _params.simMat.uniforms.tTarget = { type: "t", value: null };
-        var url = "obj/suzanne.obj";
-        var loader = new THREE.OBJLoader();
-        loader.load(url, function (object) {
-            var mesh = object.children[0];
-            mesh.scale.multiplyScalar(2.0);
-            _mapper.render(mesh, _mapTarget);
-            _params.simMat.uniforms.tTarget.value = _mapTarget;
-        });
+        var uvAnim = new UVMapAnimator(_engine.renderer.getRenderer(), "models/fox.js", _params.size);
+        uvAnim.setSpeed(0.1);
+        _params.simMat.uniforms.tTarget.value = uvAnim.target;
+        _customUpdate = uvAnim.update;
     }
 
     _engine.start();

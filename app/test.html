@@ -12,6 +12,7 @@
 <script type="text/javascript" src="js/src/Utils.js"></script>
 <script type="text/javascript" src="js/src/ShaderPass.js"></script>
 <script type="text/javascript" src="js/src/UVMapper.js"></script>
+<script type="text/javascript" src="js/src/UVMapAnimator.js"></script>
 <script type="text/javascript" src="js/src/shaders/UVMapShader.js"></script>
 
 <script type="text/javascript">
@@ -38,35 +39,20 @@ var material = new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe: true }
 // renderer.clear();
 // renderer.render(scene, camera);
 
-// mapping setup
-var mapper = new UVMapper(renderer);
-var target = mapper.createTarget(256);
+var uvAnim = new UVMapAnimator(renderer, "models/animals.js", 512);
 
 var copyPass = new ShaderPass(THREE.CopyShader);
-copyPass.material.uniforms.tDiffuse.value = target;
-
-
-// load model
-var loader = new THREE.JSONLoader( true );
-loader.load( "models/animals.js", function(geometry) {
-    mesh = new THREE.MorphAnimMesh(geometry, new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true, morphTargets:true }));
-    mesh.scale.set(0.01,0.01,0.01);
-    mesh.duration *= 50;
-    scene.add(mesh);
-
-    update();
-} );
+copyPass.material.uniforms.tDiffuse.value = uvAnim.target;
 
 var prevTime = Date.now();
 
 function update() {
     var time = Date.now();
-    mesh.updateAnimation(time - prevTime);
+    uvAnim.update(time-prevTime);
     prevTime = time;
 
-    mesh.rotation.y += 0.01;
+    // mesh.rotation.y += 0.01;
 
-    mapper.render(mesh, target);
     copyPass.render(renderer);
 
     // renderer.clear();
