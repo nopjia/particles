@@ -48,9 +48,10 @@ copyPass.material.uniforms.tDiffuse.value = target;
 
 // load model
 var loader = new THREE.JSONLoader( true );
-loader.load( "models/horse.js", function(geometry) {
+loader.load( "models/animals.js", function(geometry) {
     mesh = new THREE.MorphAnimMesh(geometry, new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true, morphTargets:true }));
     mesh.scale.set(0.01,0.01,0.01);
+    mesh.duration *= 50;
     scene.add(mesh);
 
     update();
@@ -65,11 +66,11 @@ function update() {
 
     mesh.rotation.y += 0.01;
 
-    // mapper.render(mesh, target);
-    // copyPass.render(renderer);
+    mapper.render(mesh, target);
+    copyPass.render(renderer);
 
-    renderer.clear();
-    renderer.render(scene, camera);
+    // renderer.clear();
+    // renderer.render(scene, camera);
 
     requestAnimationFrame(update);
 }
