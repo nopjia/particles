@@ -8,6 +8,7 @@ var UVMapper = function(renderer) {
     _mat.blending = THREE.NoBlending;
     _mat.depthTest = false;
     _mat.depthWrite = false;
+    _mat.morphTargets = true;
     _scene.overrideMaterial = _mat;
 
     this.render = function(mesh, target) {
