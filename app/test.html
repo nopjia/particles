@@ -48,7 +48,7 @@ copyPass.material.uniforms.tDiffuse.value = target;
 
 // load model
 var loader = new THREE.JSONLoader( true );
-loader.load( "models/elk.js", function(geometry) {
+loader.load( "models/horse.js", function(geometry) {
     mesh = new THREE.MorphAnimMesh(geometry, new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true, morphTargets:true }));
     mesh.scale.set(0.01,0.01,0.01);
     scene.add(mesh);
@@ -56,8 +56,13 @@ loader.load( "models/elk.js", function(geometry) {
     update();
 } );
 
+var prevTime = Date.now();
+
 function update() {
-    mesh.updateAnimation(10);
+    var time = Date.now();
+    mesh.updateAnimation(time - prevTime);
+    prevTime = time;
+
     mesh.rotation.y += 0.01;
 
     // mapper.render(mesh, target);
