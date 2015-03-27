@@ -5,6 +5,7 @@ var UVMapper = function(renderer) {
     var _scene  = new THREE.Scene();
 
     var _mat = createShaderMaterial(UVMapShader);
+    _mat.side = THREE.DoubleSide;
     _mat.blending = THREE.NoBlending;
     _mat.depthTest = false;
     _mat.depthWrite = false;
