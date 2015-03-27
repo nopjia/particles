@@ -39,27 +39,44 @@ var material = new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe: true }
 // renderer.clear();
 // renderer.render(scene, camera);
 
-var uvAnim = new UVMapAnimator(renderer, "models/animals.js", 512);
+var url = "models/wolf.json";
 
+var _mesh;
+var _loader = new THREE.JSONLoader( true );
+_loader.load(url, function(geometry) {
+    _mesh = new THREE.MorphAnimMesh(geometry, new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true, morphTargets:true }));
+    _mesh.scale.set(0.01,0.01,0.01);
+    _mesh.position.y -= 1;
+    scene.add(_mesh);
+});
+
+var uvAnim = new UVMapAnimator(renderer, url, 512);
 var copyPass = new ShaderPass(THREE.CopyShader);
 copyPass.material.uniforms.tDiffuse.value = uvAnim.target;
+// uvAnim = undefined;
 
 var prevTime = Date.now();
 
 function update() {
     var time = Date.now();
-    uvAnim.update(time-prevTime);
+
+    if (uvAnim) {
+        uvAnim.update((time-prevTime)/1000.0);
+        copyPass.render(renderer);
+    }
+    else if (_mesh) {
+        _mesh.updateAnimation(time-prevTime);
+        _mesh.rotation.y += 0.01;
+        renderer.clear();
+        renderer.render(scene, camera);
+    }
+
     prevTime = time;
-
-    // mesh.rotation.y += 0.01;
-
-    copyPass.render(renderer);
-
-    // renderer.clear();
-    // renderer.render(scene, camera);
 
     requestAnimationFrame(update);
 }
+
+update();
 
 </script>
 
