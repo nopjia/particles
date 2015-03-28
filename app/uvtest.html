@@ -24,7 +24,7 @@ var renderer = new THREE.WebGLRenderer({
 });
 renderer.setSize( window.innerWidth, window.innerHeight );
 renderer.autoClear = false;
-renderer.setClearColor(0x888888, 1);
+renderer.setClearColor(0x111133, 1);
 document.body.appendChild( renderer.domElement );
 
 var scene = new THREE.Scene();
@@ -39,7 +39,7 @@ var material = new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe: true }
 // renderer.clear();
 // renderer.render(scene, camera);
 
-var url = "models/bear.json";
+var url = Utils.getParameterByName("model");
 
 var uvAnim = new UVMapAnimator(renderer, 512);
 var copyPass = new ShaderPass(THREE.CopyShader);
@@ -49,8 +49,8 @@ var _mesh;
 var _loader = new THREE.JSONLoader( true );
 _loader.load(url, function(geometry) {
     _mesh = new THREE.MorphAnimMesh(geometry, new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true, morphTargets:true }));
-    // _mesh.scale.set(0.05,0.05,0.05);
-    // _mesh.position.y -= 1;
+    _mesh.scale.set(0.05,0.05,0.05);
+    _mesh.position.y -= 1;
     uvAnim.setMesh(_mesh);
     // scene.add(_mesh);
 });
