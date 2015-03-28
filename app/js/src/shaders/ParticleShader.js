@@ -3,7 +3,7 @@ var ParticleShader = {
     uniforms: {
         "tPos": { type: "t", value: null },
         "uTime" : { type: "f", value: 0.0 },
-        "uPointSize": { type: "f", value: 3.0 },
+        "uPointSize": { type: "f", value: 2.5 },
         "uAlpha": { type: "f", value: 0.2 },
         "uColor1": { type: "v3", value: new THREE.Vector3(1.0, 0.6, 0.1) },
         "uColor2": { type: "v3", value: new THREE.Vector3(1.0, 0.4, 1.0) },

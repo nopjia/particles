@@ -44,15 +44,15 @@ var App = function() {
         "sphere":  { "user gravity":4, "shape gravity":3, _shape:"SIM_SPHERE" },
         "galaxy":  { "user gravity":3, "shape gravity":1, _shape:"SIM_GALAXY" },
         "petals":  { "user gravity":3, "shape gravity":2, _shape:"SIM_ROSE_GALAXY" },
-        "bear":    { "user gravity":4, "shape gravity":6, _shape:_meshes.bear },
-        "bison":   { "user gravity":4, "shape gravity":6, _shape:_meshes.bison },
-        // "deer":    { "user gravity":4, "shape gravity":6, _shape:_meshes.deer },
-        // "dog":     { "user gravity":4, "shape gravity":6, _shape:_meshes.dog },
-        // "fox":     { "user gravity":4, "shape gravity":6, _shape:_meshes.fox },
-        "horse":   { "user gravity":4, "shape gravity":6, _shape:_meshes.horse },
-        "panther": { "user gravity":4, "shape gravity":6, _shape:_meshes.panther },
-        // "rabbit":  { "user gravity":4, "shape gravity":6, _shape:_meshes.rabbit },
-        "wolf":    { "user gravity":4, "shape gravity":6, _shape:_meshes.wolf },
+        "bear":    { "user gravity":4, "shape gravity":5, _shape:_meshes.bear },
+        "bison":   { "user gravity":4, "shape gravity":5, _shape:_meshes.bison },
+        // "deer":    { "user gravity":4, "shape gravity":5, _shape:_meshes.deer },
+        // "dog":     { "user gravity":4, "shape gravity":5, _shape:_meshes.dog },
+        // "fox":     { "user gravity":4, "shape gravity":5, _shape:_meshes.fox },
+        "horse":   { "user gravity":4, "shape gravity":5, _shape:_meshes.horse },
+        "panther": { "user gravity":4, "shape gravity":5, _shape:_meshes.panther },
+        // "rabbit":  { "user gravity":4, "shape gravity":5, _shape:_meshes.rabbit },
+        "wolf":    { "user gravity":4, "shape gravity":5, _shape:_meshes.wolf },
     };
 
 
@@ -126,51 +126,58 @@ var App = function() {
             "screenshot": _takeScreenshot,
         };
 
-         _gui.add(_guiFields, "shape", Object.keys(_presets))
+        _gui.add(_guiFields, "shape", Object.keys(_presets))
             .onFinishChange(_setPreset);
-        _gui.addColor(_guiFields, "color1").onChange(function(value) {
+
+        var fAppearance = _gui.addFolder("Appearance");
+        fAppearance.addColor(_guiFields, "color1").onChange(function(value) {
             if (value[0] === "#") value = Utils.hexToRgb(value);
             _params.drawMat.uniforms.uColor1.value.x = value[0] / 255.0;
             _params.drawMat.uniforms.uColor1.value.y = value[1] / 255.0;
             _params.drawMat.uniforms.uColor1.value.z = value[2] / 255.0;
         });
-        _gui.addColor(_guiFields, "color2").onChange(function(value) {
+        fAppearance.addColor(_guiFields, "color2").onChange(function(value) {
             if (value[0] === "#") value = Utils.hexToRgb(value);
             _params.drawMat.uniforms.uColor2.value.x = value[0] / 255.0;
             _params.drawMat.uniforms.uColor2.value.y = value[1] / 255.0;
             _params.drawMat.uniforms.uColor2.value.z = value[2] / 255.0;
         });
-        _gui.add(_guiFields, "alpha", 0, 1).onChange(function(value) {
+        fAppearance.add(_guiFields, "alpha", 0, 1).onChange(function(value) {
             _params.drawMat.uniforms.uAlpha.value = value;
         });
-        _gui.add(_guiFields, "color speed", -10, 10).onChange(function(value) {
+        fAppearance.add(_guiFields, "color speed", -10, 10).onChange(function(value) {
             _params.drawMat.uniforms.uColorSpeed.value = value;
         });
-        _gui.add(_guiFields, "color freq", 0, 5).onChange(function(value) {
+        fAppearance.add(_guiFields, "color freq", 0, 5).onChange(function(value) {
             _params.drawMat.uniforms.uColorFreq.value = value;
         });
-        _gui.add(_guiFields, "point size", 1, 10).onChange(function(value) {
+        fAppearance.add(_guiFields, "point size", 1, 10).onChange(function(value) {
             _params.drawMat.uniforms.uPointSize.value = value;
         });
-        _gui.add(_guiFields, "user gravity", 0, 10)
+
+        var fPhysics = _gui.addFolder("Physics");
+        fPhysics.add(_guiFields, "user gravity", 0, 10)
         .listen()
         .onChange(function(value) {
             _params.simMat.uniforms.uInputAccel.value = value;
         });
-        _gui.add(_guiFields, "shape gravity", 0, 10)
+        fPhysics.add(_guiFields, "shape gravity", 0, 10)
         .listen()
         .onChange(function(value) {
             _params.simMat.uniforms.uShapeAccel.value = value;
         });
-        _gui.add(_guiFields, "paused").onChange(function(value) {
+
+        var fControls = _gui.addFolder("Controls");
+        fControls.add(_guiFields, "paused").onChange(function(value) {
             _engine.pauseSimulation(value);
         }).listen();
-        _gui.add(_guiFields, "camera rotate").onChange(function(value) {
+        fControls.add(_guiFields, "camera rotate").onChange(function(value) {
             _engine.enableCameraAutoRotate(value);
         });
-        _gui.add(_guiFields, "camera control").onChange(function(value) {
+        fControls.add(_guiFields, "camera control").onChange(function(value) {
             _engine.enableCameraControl(value);
         }).listen();
+
         _gui.add(_guiFields, "screenshot");
     };
 
