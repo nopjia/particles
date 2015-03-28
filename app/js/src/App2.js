@@ -1,9 +1,11 @@
 var App = function() {
     var _gui, _guiFields;
     var _engine;
-    var _currPreset = "galaxy"; // initial preset
+    var _currPreset = Utils.getParameterByName("shape") || "galaxy"; // initial preset
     var _currSimMode;
     var _uvAnim;
+
+
 
     // DEFINES
 
@@ -26,6 +28,7 @@ var App = function() {
         "SIM_TEXTURE"
     ];
 
+    // must have same name as preset, for async loading to work properly
     var _meshes = {
         bear:      { scale:0.025, yOffset:-2.50, speed:0.05, url:"models/bear.json" },
         bison:     { scale:0.020, yOffset:-2.00, speed:0.10, url:"models/bison.json" },
@@ -40,7 +43,7 @@ var App = function() {
 
     var _presets = {
         "none":    { "user gravity":3, "shape gravity":1, _shape:"" },
-        "noise":   { "user gravity":3, "shape gravity":1, _shape:"SIM_NOISE" },
+        // "noise":   { "user gravity":3, "shape gravity":1, _shape:"SIM_NOISE" },
         "plane":   { "user gravity":4, "shape gravity":3, _shape:"SIM_PLANE" },
         "sphere":  { "user gravity":4, "shape gravity":3, _shape:"SIM_SPHERE" },
         "galaxy":  { "user gravity":3, "shape gravity":1, _shape:"SIM_GALAXY" },
@@ -55,6 +58,7 @@ var App = function() {
         // "rabbit":  { "user gravity":3, "shape gravity":5, _shape:_meshes.rabbit },
         "wolf":    { "user gravity":3, "shape gravity":5, _shape:_meshes.wolf },
     };
+
 
 
     // FUNCTIONS
@@ -74,7 +78,7 @@ var App = function() {
     };
 
     var _setPreset = function(name) {
-        var preset = _presets[name];
+        var preset = _presets[name] || _presets.none;
 
         // set shape
         if (preset._shape.length >= 0) {
@@ -97,12 +101,14 @@ var App = function() {
     };
 
 
+
     // UPDATE
 
     var _update = _params.update = function(dt,t) {
         _params.drawMat.uniforms.uTime.value = t;  // for ParticleShader.vs
         _uvAnim.update(dt,t);
     };
+
 
 
     // INIT
@@ -221,6 +227,10 @@ var App = function() {
                 mesh.position.y = _meshes[k].yOffset;
                 mesh.duration = 1000 / _meshes[k].speed;
                 _meshes[k].mesh = mesh;
+
+                // refresh mesh if same name as preset
+                if (_currPreset === k)
+                    _uvAnim.setMesh(mesh);
             });
         });
     };
