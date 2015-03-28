@@ -15,12 +15,5 @@ var UVMapAnimator = function(renderer, size) {
 
     this.setMesh = function(mesh) {
         _mesh = mesh;
-        _mesh.duration = 1000 / _speed;
-    };
-
-    this.setSpeed = function(speed) {
-        _speed = speed;
-        if (_mesh)
-            _mesh.duration = 1000 / _speed;
     };
 };

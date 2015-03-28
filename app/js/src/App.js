@@ -53,9 +53,7 @@ var App = function() {
         Object.keys(_presetShapes).forEach(function(k) {
             delete _params.simMat.defines[_presetShapes[k]];
         });
-
         _params.simMat.defines[_presetShapes[name]] = "";
-
         _params.simMat.needsUpdate = true;
 
         _currShape = name;
@@ -140,7 +138,7 @@ var App = function() {
         _gui.add(_guiFields, "user gravity", 0, 10).onChange(function(value) {
             _params.simMat.uniforms.uInputAccel.value = value;
         });
-        _gui.add(_guiFields, "shape gravity", 0, 5).onChange(function(value) {
+        _gui.add(_guiFields, "shape gravity", 0, 10).onChange(function(value) {
             _params.simMat.uniforms.uShapeAccel.value = value;
         });
         _gui.add(_guiFields, "shape", Object.keys(_presetShapes))
@@ -192,17 +190,17 @@ var App = function() {
         // TODO_NOP TEST
 
         var uvAnim = new UVMapAnimator(_engine.renderer.getRenderer(), _params.size);
-        uvAnim.setSpeed(0.1);
         _params.simMat.uniforms.tTarget = { type: "t", value: uvAnim.target };
         _customUpdate = uvAnim.update;
 
         var url = "models/wolf.json";
         var loader = new THREE.JSONLoader(true);
         loader.load(url, function(geometry) {
-            var mesh = new THREE.MorphAnimMesh(geometry, new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true, morphTargets:true }));
+            var mesh = new THREE.MorphAnimMesh(geometry);
             var scale = 0.04;
             mesh.scale.set(scale,scale,scale);
             mesh.position.y -= 1;
+            mesh.duration = 1000 / 0.1;
             uvAnim.setMesh(mesh);
         });
     }

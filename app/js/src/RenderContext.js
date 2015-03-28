@@ -33,7 +33,7 @@ var RenderContext = function(canvas) {
         logarithmicDepthBuffer: false,
         autoClear: false,
         clearColor: 0x0,
-        clearAlpha: 1,
+        clearAlpha: 0,
         sortObjects: true,
         shadowMapEnabled: false,
         shadowMapType: THREE.PCFShadowMap,

@@ -39,9 +39,9 @@ var material = new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe: true }
 // renderer.clear();
 // renderer.render(scene, camera);
 
-var url = "models/wolf.json";
+var url = "models/bear.json";
 
-var uvAnim = new UVMapAnimator(renderer, url, 512);
+var uvAnim = new UVMapAnimator(renderer, 512);
 var copyPass = new ShaderPass(THREE.CopyShader);
 copyPass.material.uniforms.tDiffuse.value = uvAnim.target;
 
@@ -49,8 +49,8 @@ var _mesh;
 var _loader = new THREE.JSONLoader( true );
 _loader.load(url, function(geometry) {
     _mesh = new THREE.MorphAnimMesh(geometry, new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true, morphTargets:true }));
-    _mesh.scale.set(0.05,0.05,0.05);
-    _mesh.position.y -= 1;
+    // _mesh.scale.set(0.05,0.05,0.05);
+    // _mesh.position.y -= 1;
     uvAnim.setMesh(_mesh);
     // scene.add(_mesh);
 });

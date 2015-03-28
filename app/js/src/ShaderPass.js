@@ -44,8 +44,10 @@ var ShaderPass = function(shader) {
     this.scene  = new THREE.Scene();
     this.scene.add(this.mesh);
     this.camera = new THREE.OrthographicCamera( -1, 1, 1, -1, 0, 1 );
+
+    this.clear = false;
 };
 
 ShaderPass.prototype.render = function(renderer, writeBuffer) {
-    renderer.render(this.scene, this.camera, writeBuffer);
+    renderer.render(this.scene, this.camera, writeBuffer, this.clear);
 };
