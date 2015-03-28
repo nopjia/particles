@@ -12,7 +12,7 @@ Nop Jiarathanakul [iamnop.com](http://www.iamnop.com/)
 
 Animals by [Mirada](http://mirada.com/) from [ro.me](http://www.ro.me/)
 
-Music, ["Moonlight Reprise"](https://freemusicarchive.org/music/Kai_Engel/Irsens_Tale/Kai_Engel_-_Irsens_Tale_-_04_Moonlight_Reprise) by Kai Engel
+Music by [Kai Engel](https://freemusicarchive.org/music/Kai_Engel/Irsens_Tale/Kai_Engel_-_Irsens_Tale_-_04_Moonlight_Reprise)
 
 ---
 Copyright © 2015 Nop Jiarathanakul
