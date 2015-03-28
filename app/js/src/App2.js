@@ -2,6 +2,7 @@ var App = function() {
     var _gui, _guiFields;
     var _engine;
     var _currPreset = "galaxy"; // initial preset
+    var _currSimMode;
     var _uvAnim;
 
     // DEFINES
@@ -44,21 +45,26 @@ var App = function() {
         "sphere":  { "user gravity":4, "shape gravity":3, _shape:"SIM_SPHERE" },
         "galaxy":  { "user gravity":3, "shape gravity":1, _shape:"SIM_GALAXY" },
         "petals":  { "user gravity":3, "shape gravity":2, _shape:"SIM_ROSE_GALAXY" },
-        "bear":    { "user gravity":4, "shape gravity":5, _shape:_meshes.bear },
-        "bison":   { "user gravity":4, "shape gravity":5, _shape:_meshes.bison },
-        // "deer":    { "user gravity":4, "shape gravity":5, _shape:_meshes.deer },
-        // "dog":     { "user gravity":4, "shape gravity":5, _shape:_meshes.dog },
-        // "fox":     { "user gravity":4, "shape gravity":5, _shape:_meshes.fox },
-        "horse":   { "user gravity":4, "shape gravity":5, _shape:_meshes.horse },
-        "panther": { "user gravity":4, "shape gravity":5, _shape:_meshes.panther },
-        // "rabbit":  { "user gravity":4, "shape gravity":5, _shape:_meshes.rabbit },
-        "wolf":    { "user gravity":4, "shape gravity":5, _shape:_meshes.wolf },
+        "bear":    { "user gravity":3, "shape gravity":5, _shape:_meshes.bear },
+        "bison":   { "user gravity":3, "shape gravity":5, _shape:_meshes.bison },
+        // "deer":    { "user gravity":3, "shape gravity":5, _shape:_meshes.deer },
+        // "dog":     { "user gravity":3, "shape gravity":5, _shape:_meshes.dog },
+        // "fox":     { "user gravity":3, "shape gravity":5, _shape:_meshes.fox },
+        "horse":   { "user gravity":3, "shape gravity":5, _shape:_meshes.horse },
+        "panther": { "user gravity":3, "shape gravity":5, _shape:_meshes.panther },
+        // "rabbit":  { "user gravity":3, "shape gravity":5, _shape:_meshes.rabbit },
+        "wolf":    { "user gravity":3, "shape gravity":5, _shape:_meshes.wolf },
     };
 
 
     // FUNCTIONS
 
     var _setSimMode = function(name) {
+        if (name === _currSimMode)
+            return;
+
+        _currSimMode = name;
+
         _simModes.forEach(function(s) {
             delete _params.simMat.defines[s];
         });
