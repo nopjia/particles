@@ -30,12 +30,12 @@ var App = function() {
 
     // must have same name as preset, for async loading to work properly
     var _meshes = {
-        bear:      { scale:0.025, yOffset:-2.50, speed:0.05, url:"models/bear.json" },
+        bear:      { scale:0.023, yOffset:-2.30, speed:0.05, url:"models/bear.json" },
         bison:     { scale:0.020, yOffset:-2.00, speed:0.10, url:"models/bison.json" },
         // deer:      { scale:0.040, yOffset:-2.00, speed:0.10, url:"models/deer.json" },
         // dog:       { scale:0.040, yOffset:-1.65, speed:0.10, url:"models/retriever.json" },
         // fox:       { scale:0.070, yOffset:-1.50, speed:0.10, url:"models/fox.json" },
-        horse:     { scale:0.020, yOffset:-1.75, speed:0.08, url:"models/horse.json" },
+        horse:     { scale:0.022, yOffset:-2.30, speed:0.08, url:"models/horse.json" },
         panther:   { scale:0.030, yOffset:-1.70, speed:0.10, url:"models/panther.json" },
         // rabbit:    { scale:0.040, yOffset:-1.00, speed:0.05, url:"models/rabbit.json" },
         wolf:      { scale:0.040, yOffset:-1.70, speed:0.10, url:"models/wolf.json" },
