@@ -124,6 +124,7 @@ var App = function() {
             "camera rotate": true,
             "camera control": false,
             "screenshot": _takeScreenshot,
+            "fullscreen": Utils.toggleFullscreen,
         };
 
         _gui.add(_guiFields, "shape", Object.keys(_presets))
@@ -179,6 +180,7 @@ var App = function() {
         }).listen();
 
         _gui.add(_guiFields, "screenshot");
+        _gui.add(_guiFields, "fullscreen");
     };
 
     var _initKeyboard = function() {
