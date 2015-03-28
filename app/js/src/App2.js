@@ -83,10 +83,11 @@ var App = function() {
         // set shape
         if (preset._shape.length >= 0) {
             _setSimMode(preset._shape);
+            _uvAnim.setMesh();  // set no mesh
         }
         else {
-            _uvAnim.setMesh(preset._shape.mesh);
             _setSimMode("SIM_TEXTURE");
+            _uvAnim.setMesh(preset._shape.mesh);
         }
 
         _guiFields["user gravity"]  = _params.simMat.uniforms.uInputAccel.value = preset["user gravity"];
@@ -133,6 +134,8 @@ var App = function() {
                 // next tour trigger will go into shape instead of the between
                 if (_currPreset === seqName) {
                     _setPreset(BETWEEN_PRESET);
+                    _guiFields.shape = BETWEEN_PRESET;
+                    _gui.__controllers[0].updateDisplay();  // HARDCODE: controller idx
                     timer = BETWEEN_DURATION;
                 }
                 else {
@@ -145,7 +148,7 @@ var App = function() {
                     seqName = sequence[seqIdx++];
                     _setPreset(seqName);
                     _guiFields.shape = seqName;
-                    _gui.__controllers[0].updateDisplay();  // HARDCODE: controller idx
+                    _gui.__controllers[0].updateDisplay();
                     console.log("tour: "+seqName);
                     timer = SHAPE_DURATION;
                 }
@@ -280,6 +283,7 @@ var App = function() {
                 mesh.scale.set(_meshes[k].scale,_meshes[k].scale,_meshes[k].scale);
                 mesh.position.y = _meshes[k].yOffset;
                 mesh.duration = 1000 / _meshes[k].speed;
+                mesh.name = k; // for debugging
                 _meshes[k].mesh = mesh;
 
                 // refresh mesh if same name as preset
