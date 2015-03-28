@@ -5,7 +5,7 @@ var App = function() {
     var _currSimMode;
     var _uvAnim;
     var _tourMode = false;
-
+    var _musicElem = document.getElementById("music");
 
     // DEFINES
 
@@ -100,6 +100,13 @@ var App = function() {
         });
     };
 
+    var _toggleMusic = function() {
+        if (_musicElem.paused)
+            _musicElem.play();
+        else
+            _musicElem.pause();
+    };
+
 
 
     // UPDATE
@@ -177,12 +184,16 @@ var App = function() {
             "screenshot": _takeScreenshot,
             "fullscreen": Utils.toggleFullscreen,
             "take tour!": _tourMode,
+            "music": true,
         };
 
         _gui.add(_guiFields, "shape", Object.keys(_presets))
             .onFinishChange(_setPreset);
         _gui.add(_guiFields, "take tour!").onChange(function(value) {
             _tourMode = value;
+        });
+        _gui.add(_guiFields, "music").onChange(function(value) {
+            _toggleMusic();
         });
 
         var fAppearance = _gui.addFolder("Appearance");
