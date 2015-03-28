@@ -1,8 +1,10 @@
-#Particle Dream
+#A Particle Dream
 
 An interactive particle simulation for your mind
 
 See it [live here](http://www.iamnop.com/particles/)
+
+Inspired by ["Particle Dreams (1988)"](http://www.karlsims.com/particle-dreams.html) by Karl Sims
 
 ![download](https://cloud.githubusercontent.com/assets/565791/6882387/2cbb2196-d540-11e4-8383-a79a8fc418d5.png)
 
