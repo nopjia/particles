@@ -93,6 +93,7 @@ Utils.dataUrlToBlobUrl = function(dataUrl) {
     return window.URL.createObjectURL(Utils.dataUrlToBlob(dataUrl));
 };
 
+// https://developer.mozilla.org/en-US/docs/Web/Guide/API/DOM/Using_full_screen_mode
 Utils.toggleFullscreen = function() {
     if (!document.fullscreenElement &&    // alternative standard method
         !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement ) {  // current working methods
@@ -118,9 +119,30 @@ Utils.toggleFullscreen = function() {
     }
 };
 
+// http://stackoverflow.com/questions/901115/how-can-i-get-query-string-values-in-javascript
 Utils.getParameterByName = function(name) {
     name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
     var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
         results = regex.exec(location.search);
     return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+};
+
+// http://bost.ocks.org/mike/shuffle/
+Utils.shuffle = function(array) {
+  var currentIndex = array.length, temporaryValue, randomIndex ;
+
+  // While there remain elements to shuffle...
+  while (0 !== currentIndex) {
+
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+
+  return array;
 };

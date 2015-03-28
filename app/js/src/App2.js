@@ -4,7 +4,7 @@ var App = function() {
     var _currPreset = Utils.getParameterByName("shape") || "galaxy"; // initial preset
     var _currSimMode;
     var _uvAnim;
-
+    var _tourMode = false;
 
 
     // DEFINES
@@ -66,8 +66,7 @@ var App = function() {
     var _setSimMode = function(name) {
         if (name === _currSimMode)
             return;
-
-        _currSimMode = name;
+        _currSimMode = name;  // cache mode, prevent shader recompile
 
         _simModes.forEach(function(s) {
             delete _params.simMat.defines[s];
@@ -79,6 +78,7 @@ var App = function() {
 
     var _setPreset = function(name) {
         var preset = _presets[name] || _presets.none;
+        _currPreset = name;
 
         // set shape
         if (preset._shape.length >= 0) {
@@ -107,7 +107,46 @@ var App = function() {
     var _update = _params.update = function(dt,t) {
         _params.drawMat.uniforms.uTime.value = t;  // for ParticleShader.vs
         _uvAnim.update(dt,t);
+        if(_tourMode) _tourUpdate(dt,t);
     };
+
+    var _tourUpdate = (function() {
+        var SHAPE_DURATION = 25.0;
+        var BETWEEN_DURATION = 15.0;
+        var BETWEEN_PRESET = "galaxy";
+        var sequence = ["wolf", "petals", "bear", "sphere", "horse", "panther", "plane", "bison"];
+        var timer = 0.0;
+        var seqIdx = 0;
+        var seqName;
+
+        return function(dt,t) {
+            if (timer <= 0.0) {
+                // check against sequence
+                // if user navigate to different preset
+                // next tour trigger will go into shape instead of the between
+                if (_currPreset === seqName) {
+                    _setPreset(BETWEEN_PRESET);
+                    timer = BETWEEN_DURATION;
+                }
+                else {
+                    // sequence finished
+                    if (seqIdx >= sequence.length) {
+                        seqIdx = 0;
+                        Utils.shuffle(sequence);
+                        console.log("tour shuffled: " + sequence);
+                    }
+                    seqName = sequence[seqIdx++];
+                    _setPreset(seqName);
+                    _guiFields.shape = seqName;
+                    _gui.__controllers[0].updateDisplay();  // HARDCODE: controller idx
+                    console.log("tour: "+seqName);
+                    timer = SHAPE_DURATION;
+                }
+            }
+
+            timer -= dt;
+        };
+    })();
 
 
 
@@ -137,10 +176,14 @@ var App = function() {
             "camera control": false,
             "screenshot": _takeScreenshot,
             "fullscreen": Utils.toggleFullscreen,
+            "take tour!": _tourMode,
         };
 
         _gui.add(_guiFields, "shape", Object.keys(_presets))
             .onFinishChange(_setPreset);
+        _gui.add(_guiFields, "take tour!").onChange(function(value) {
+            _tourMode = value;
+        });
 
         var fAppearance = _gui.addFolder("Appearance");
         fAppearance.addColor(_guiFields, "color1").onChange(function(value) {
