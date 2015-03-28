@@ -190,11 +190,21 @@ var App = function() {
         _initKeyboard();
 
         // TODO_NOP TEST
-        _params.simMat.uniforms.tTarget = { type: "t", value: null };
-        var uvAnim = new UVMapAnimator(_engine.renderer.getRenderer(), "models/fox.js", _params.size);
+
+        var uvAnim = new UVMapAnimator(_engine.renderer.getRenderer(), _params.size);
         uvAnim.setSpeed(0.1);
-        _params.simMat.uniforms.tTarget.value = uvAnim.target;
+        _params.simMat.uniforms.tTarget = { type: "t", value: uvAnim.target };
         _customUpdate = uvAnim.update;
+
+        var url = "models/wolf.json";
+        var loader = new THREE.JSONLoader(true);
+        loader.load(url, function(geometry) {
+            var mesh = new THREE.MorphAnimMesh(geometry, new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true, morphTargets:true }));
+            var scale = 0.04;
+            mesh.scale.set(scale,scale,scale);
+            mesh.position.y -= 1;
+            uvAnim.setMesh(mesh);
+        });
     }
 
     _engine.start();
