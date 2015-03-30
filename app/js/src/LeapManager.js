@@ -6,16 +6,23 @@ var LeapManager = function(renderer, camera, transform) {
 
     // PUBLIC
 
+    this.followCamera = true;
+
+    // read-only
     this.frame = undefined;
     this.palmPositions = [new THREE.Vector3(), new THREE.Vector3()];
     this.jointPositions = []; for (var i=0; i<50; i++) this.jointPositions.push(new THREE.Vector3());
+    this.activeHandCount = 0;
     this.activeJointCount = 0;
 
     // FUNCTIONS
 
     this.update = function() {
         // update leapRoot transform
-        _root.matrix.multiplyMatrices(_camera.matrix, _tmat);
+        if (this.followCamera)
+            _root.matrix.multiplyMatrices(_camera.matrix, _tmat);
+        else
+            _root.matrix.copy(_tmat);
         _root.matrixWorldNeedsUpdate = true;
 
         this.frame = _controller.frame();
@@ -26,6 +33,9 @@ var LeapManager = function(renderer, camera, transform) {
         for (var i=0; i<50; i++)
             this.jointPositions[i].set();
 
+        this.activeHandCount = this.frame.hands.length;
+        this.activeJointCount = this.activeHandCount * 25;
+
         // extract palm positions
         for (var h=0; h<this.frame.hands.length; h++) {
             var rawpos = this.frame.hands[h].palmPosition;
@@ -34,7 +44,6 @@ var LeapManager = function(renderer, camera, transform) {
         }
 
         // extract joint positions
-        this.activeJointCount = this.frame.hands.length * 25;
         var jointIdx = 0;
         for (var h=0; h<this.frame.hands.length; h++) {
             var hand = this.frame.hands[h];
