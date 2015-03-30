@@ -28,6 +28,7 @@
 <script type="text/javascript" src="js/lib/OrbitControls.js"></script>
 <script type="text/javascript" src="js/lib/Clock.js"></script>
 <script type="text/javascript" src="js/src/UpdateLoop.js"></script>
+<script type="text/javascript" src="js/src/LeapManager.js"></script>
 <script src="//js.leapmotion.com/leap-0.6.4.js"></script>
 <script src="//js.leapmotion.com/leap-plugins-0.1.10.js"></script>
 
@@ -59,61 +60,61 @@ _controls.rotateUp(Math.PI/6);
 _controls.autoRotate = true;
 _controls.autoRotateSpeed = 3.0;
 _controls.noPan = true;
-// _controls.enabled = false;  // disable user input
+_controls.enabled = false;  // disable user input
 
 // mesh
+_redMat = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true });
 _mesh = new THREE.Mesh(
     new THREE.BoxGeometry(1,1,1),
-    new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true })
+    _redMat
 );
 _scene.add(_mesh);
 
+_shadowMesh = [];
+for (var i=0; i<2; i++) {
+    _shadowMesh[i] = new THREE.Mesh(
+        new THREE.CircleGeometry(0.5, 16),
+        new THREE.MeshBasicMaterial({ color: 0x000000 })
+    );
+    _shadowMesh[i].position.y = -0.5;
+    _shadowMesh[i].rotation.x = -Math.PI/2.0;
+    _scene.add(_shadowMesh[i]);
+}
+
+_jointMeshes = [];
+for (var i=0; i<50; i++) {
+    var mesh = new THREE.Mesh(new THREE.CircleGeometry(0.1, 4), _redMat);
+    _jointMeshes.push(mesh);
+    _scene.add(mesh);
+}
+
 // leap
-var _LEAP_SCALE = 0.01;
-var _LEAP_POSITION = new THREE.Vector3(0.0, -2.0, -8.0);    // same z as camera
-var _leapTMat = new THREE.Matrix4();
-_leapTMat.scale(new THREE.Vector3(_LEAP_SCALE,_LEAP_SCALE,_LEAP_SCALE));
-_leapTMat.setPosition(_LEAP_POSITION);
-var _leapScene = new THREE.Scene();
-_leapScene.overrideMaterial = new THREE.MeshBasicMaterial({
-    color: 0xffffff,
-    opacity: 0.25,
-});
-var _leapRoot = new THREE.Object3D();
-_leapRoot.matrixAutoUpdate = false;
-_leapScene.add(_leapRoot);
-var _leapController = new Leap.Controller();
-_leapController.use('boneHand', {
-    render: function() {},
-    scene: _leapRoot,
-    arm: false,
-}).connect();
-var _leapUpdate = function() {
-    // update leapRoot transform
-    _leapRoot.matrix.multiplyMatrices(_camera.matrix, _leapTMat);
-    _leapRoot.matrixWorldNeedsUpdate = true;
-};
+var _LEAP_SCALE = new THREE.Vector3(0.01,0.01,0.01);
+var _LEAP_POS = new THREE.Vector3(0.0, -2.0, -_camera.position.z);
+var _LEAP_ROT = new THREE.Quaternion();
+_LEAP_ROT.setFromEuler(new THREE.Euler(Math.PI/6, 0.0, 0.0));  // cancel out camera tilt
+var _leapTMat = (new THREE.Matrix4()).compose(_LEAP_POS, _LEAP_ROT, _LEAP_SCALE);
+var _leapMan = new LeapManager(_renderer, _camera, _leapTMat);
 
 // update loop
 _updateLoop = new UpdateLoop();
 _updateLoop.fixedCallback = function onFixedUpdate(dt,t) {};
 _updateLoop.frameCallback = function onFrameUpdate(dt,t) {
     _controls.update();
-    _leapUpdate();
+    _leapMan.update();
+
+    for (var i=0; i<_leapMan.palmPositions.length; i++) {
+        _shadowMesh[i].position.x = _leapMan.palmPositions[i].x;
+        _shadowMesh[i].position.z = _leapMan.palmPositions[i].z;
+    }
+    for (var i=0; i<_leapMan.jointPositions.length; i++) {
+        _jointMeshes[i].position.copy(_leapMan.jointPositions[i]);
+    }
 
     _renderer.clear();
     _renderer.render(_scene, _camera);
-    _renderer.render(_leapScene, _camera);
 
-    var frame = _leapController.frame();
-    _debug.innerHTML =
-        "hand0: " + (frame.hands[0] ? frame.hands[0].palmPosition : "") + "<br>" +
-        "pinch: " + (frame.hands[0] ? frame.hands[0].pinchStrength : "") + "<br>" +
-        "grab: " +  (frame.hands[0] ? frame.hands[0].grabStrength : "") + "<br>" +
-        "hand1: " + (frame.hands[1] ? frame.hands[1].palmPosition : "") + "<br>" +
-        "pinch: " + (frame.hands[1] ? frame.hands[1].pinchStrength : "") + "<br>" +
-        "grab: " +  (frame.hands[1] ? frame.hands[1].grabStrength : "") + "<br>" +
-        "";
+    _leapMan.render();
 };
 
 _updateLoop.start();
