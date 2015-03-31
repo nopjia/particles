@@ -111,18 +111,18 @@ var ParticleEngine = function(params) {
                 var point = _raycaster.ray.intersectPlane(plane);
 
                 _simMat.uniforms.uInputPos.value[mId].copy(point);
-                _simMat.uniforms.uInputPosFlag.value.setComponent(mId, ms.buttons[0] ? 1 : -1);
+                _simMat.uniforms.uInputPosAccel.value.setComponent(mId, ms.buttons[0] ? 1.0 : -1.0);
             }
             else {
-                _simMat.uniforms.uInputPosFlag.value.setComponent(mId, 0);
+                _simMat.uniforms.uInputPosAccel.value.setComponent(mId, 0);
             }
         }
 
         // _debugBox.innerHTML +=
-        //     "<br>"+_simMat.uniforms.uInputPosFlag.value.x.toFixed(2)
-        //     +" "+_simMat.uniforms.uInputPosFlag.value.y.toFixed(2)
-        //     +" "+_simMat.uniforms.uInputPosFlag.value.z.toFixed(2)
-        //     +" "+_simMat.uniforms.uInputPosFlag.value.w.toFixed(2);
+        //     "<br>"+_simMat.uniforms.uInputPosAccel.value.x.toFixed(2)
+        //     +" "+_simMat.uniforms.uInputPosAccel.value.y.toFixed(2)
+        //     +" "+_simMat.uniforms.uInputPosAccel.value.z.toFixed(2)
+        //     +" "+_simMat.uniforms.uInputPosAccel.value.w.toFixed(2);
     };
 
 

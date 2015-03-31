@@ -10,7 +10,7 @@ uniform sampler2D tCurr;
 uniform float uDeltaT;
 uniform float uTime;
 uniform vec3 uInputPos[4];
-uniform vec4 uInputPosFlag;
+uniform vec4 uInputPosAccel;
 uniform float uInputAccel;
 uniform float uShapeAccel;
 
@@ -34,16 +34,7 @@ void main() {
     #inject shaders/chunks/SimGalaxy.glsl
     #inject shaders/chunks/SimTextureTarget.glsl
 
-    // input pos
-
-    #define PROCESS_INPUT_POS(FLAG, POS) if ((FLAG) != 0.0) { vec3 toCenter = (POS)-currPos; float toCenterLength = length(toCenter); accel += (toCenter/toCenterLength) * (FLAG)*uInputAccel/toCenterLength; }
-
-    PROCESS_INPUT_POS(uInputPosFlag.x, uInputPos[0]);
-    #ifdef MULTIPLE_INPUT
-        PROCESS_INPUT_POS(uInputPosFlag.y, uInputPos[1]);
-        PROCESS_INPUT_POS(uInputPosFlag.z, uInputPos[2]);
-        PROCESS_INPUT_POS(uInputPosFlag.w, uInputPos[3]);
-    #endif
+    #inject shaders/chunks/SimInputPos.glsl
 
     // state updates
     vel = K_VEL_DECAY * vel + accel * uDeltaT;
