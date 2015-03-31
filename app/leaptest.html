@@ -85,12 +85,18 @@ for (var i=0; i<2; i++) {
     _scene.add(_shadowMesh[i]);
 }
 
-_jointMeshes = [];
-for (var i=0; i<50; i++) {
-    var mesh = new THREE.Mesh(new THREE.CircleGeometry(0.1, 4), _redMat);
-    _jointMeshes.push(mesh);
+_palmMeshes = [];
+for (var i=0; i<2; i++) {
+    var mesh = new THREE.Mesh(new THREE.TetrahedronGeometry(0.25), _redMat);
+    _palmMeshes.push(mesh);
     _scene.add(mesh);
 }
+// _jointMeshes = [];
+// for (var i=0; i<50; i++) {
+//     var mesh = new THREE.Mesh(new THREE.CircleGeometry(0.1, 4), _redMat);
+//     _jointMeshes.push(mesh);
+//     _scene.add(mesh);
+// }
 
 // leap
 var _LEAP_SCALE = new THREE.Vector3(0.01,0.01,0.01);
@@ -108,12 +114,19 @@ _updateLoop.frameCallback = function onFrameUpdate(dt,t) {
     _leapMan.update();
 
     for (var i=0; i<_leapMan.palmPositions.length; i++) {
+        _shadowMesh[i].visible = false;
+        _palmMeshes[i].visible = false;
+    }
+    for (var i=0; i<_leapMan.activeHandCount; i++) {
         _shadowMesh[i].position.x = _leapMan.palmPositions[i].x;
         _shadowMesh[i].position.z = _leapMan.palmPositions[i].z;
+        _palmMeshes[i].position.copy(_leapMan.palmPositions[i]);
+        _shadowMesh[i].visible = true;
+        _palmMeshes[i].visible = true;
     }
-    for (var i=0; i<_leapMan.jointPositions.length; i++) {
-        _jointMeshes[i].position.copy(_leapMan.jointPositions[i]);
-    }
+    // for (var i=0; i<_leapMan.jointPositions.length; i++) {
+    //     _jointMeshes[i].position.copy(_leapMan.jointPositions[i]);
+    // }
 
     _renderer.clear();
     _renderer.render(_scene, _camera);
