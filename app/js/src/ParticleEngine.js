@@ -8,6 +8,7 @@ var ParticleEngine = function(params) {
     var _sim, _simMat, _initMat, _drawMat;
     var _mouse;
     var _controls, _raycaster;
+    var _leapMan;
     var _customUpdate;
     var _pauseSim = false;
 
@@ -31,14 +32,17 @@ var ParticleEngine = function(params) {
     var _onFrameUpdate = function(dt, t) {
         _stats.begin();
 
+        _leapUpdate();
+
         if (!_controls.enabled) {
-            _mouseUpdate();
+            // _mouseUpdate();      // TODO_NOP: make play nice with leap
             _controls.update();
         }
 
         if(_customUpdate) _customUpdate(dt, t);
 
         _renderer.update(dt);
+        _leapMan.render();
 
         _stats.end();
     };
@@ -88,6 +92,14 @@ var ParticleEngine = function(params) {
 
         _raycaster = new THREE.Raycaster();
 
+        var tmat = (new THREE.Matrix4()).compose(
+            new THREE.Vector3(0.0, -3.0, -_camera.position.z),
+            new THREE.Quaternion(),
+            new THREE.Vector3(0.015,0.015,0.015));
+        _leapMan = new LeapManager(_renderer.getRenderer(), _camera, tmat);
+        _simMat.defines.MULTIPLE_INPUT = "";    // TODO_NOP: at least even hardcode numbers for this in shader
+        _simMat.needsUpdate = true;
+
         _debugBox = document.querySelector("#debug-box");
     };
 
@@ -123,6 +135,29 @@ var ParticleEngine = function(params) {
         //     +" "+_simMat.uniforms.uInputPosAccel.value.y.toFixed(2)
         //     +" "+_simMat.uniforms.uInputPosAccel.value.z.toFixed(2)
         //     +" "+_simMat.uniforms.uInputPosAccel.value.w.toFixed(2);
+    };
+
+    var _leapUpdate = function() {
+        var GRAB_PULL = 0.1;
+        var GRAB_PUSH = 1.0;
+
+        _leapMan.update();
+
+        // zero all forces
+        _simMat.uniforms.uInputPosAccel.value.set(0, 0, 0, 0);
+
+        for (var i=0; i<_leapMan.activeHandCount; i++) {
+            var grab = _leapMan.frame.hands[i].grabStrength;
+            if (grab <= GRAB_PULL || grab >= GRAB_PUSH) {
+                _simMat.uniforms.uInputPos.value[i].copy(_leapMan.palmPositions[i]);
+                _simMat.uniforms.uInputPosAccel.value.setComponent(i, grab > 0.5 ? 1.0 : -1.0);
+            }
+        }
+
+        _debugBox.innerHTML =
+            "grab1: " + (_leapMan.frame.hands[0] ? _leapMan.frame.hands[0].grabStrength : "") +
+            "grab2: " + (_leapMan.frame.hands[1] ? _leapMan.frame.hands[1].grabStrength : "") +
+            "";
     };
 
 
