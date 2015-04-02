@@ -135,17 +135,19 @@ var ParticleEngine = function(params) {
     };
 
     var _leapUpdate = function() {
+        var LEAP_INPUT_IDX_OFFSET = 2;  // takes last two slots, so mouse can work at same time
+
         _leapMan.update();
 
         for (var i=0; i<_leapMan.activeHandCount; i++) {
-            var grab = _leapMan.frame.hands[i].grabStrength;
+            var inputIdx = i+LEAP_INPUT_IDX_OFFSET;
             if (_leapMan.frame.hands[i].grabStrength === 1.0) {
-                _simMat.uniforms.uInputPos.value[i].copy(_leapMan.palmPositions[i]);
-                _simMat.uniforms.uInputPosAccel.value.setComponent(i, 1.0);
+                _simMat.uniforms.uInputPos.value[inputIdx].copy(_leapMan.palmPositions[i]);
+                _simMat.uniforms.uInputPosAccel.value.setComponent(inputIdx, 1.0);
             }
             else if (_leapMan.frame.hands[i].sphereRadius >= 100.0) {
-                _simMat.uniforms.uInputPos.value[i].copy(_leapMan.palmPositions[i]);
-                _simMat.uniforms.uInputPosAccel.value.setComponent(i, -1.0);
+                _simMat.uniforms.uInputPos.value[inputIdx].copy(_leapMan.palmPositions[i]);
+                _simMat.uniforms.uInputPosAccel.value.setComponent(inputIdx, -1.0);
             }
         }
 

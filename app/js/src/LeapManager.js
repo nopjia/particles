@@ -1,6 +1,10 @@
 var LeapManager = function(renderer, camera, transform) {
     var _scene, _root, _controller;
 
+    var MAX_HANDS = 2;      // apparently leap can have more than 2 hands
+                            // more than 2 hands will draw, from plugin
+                            // but will not be taken into account
+
     this.renderer = renderer;
     this.camera = camera;
     this.matrix = transform;
@@ -32,8 +36,8 @@ var LeapManager = function(renderer, camera, transform) {
         this.frame = _controller.frame();
 
         // extract palm positions
-        this.activeHandCount = this.frame.hands.length;
-        for (var h=0; h<this.frame.hands.length; h++) {
+        this.activeHandCount = Math.min(this.frame.hands.length, MAX_HANDS);
+        for (var h=0; h<this.activeHandCount; h++) {
             var pos = this.frame.hands[h].palmPosition;
             this.palmPositions[h].set(pos[0],pos[1],pos[2]);
             this.palmPositions[h].applyMatrix4(_root.matrix);
