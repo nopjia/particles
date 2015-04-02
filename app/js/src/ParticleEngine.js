@@ -34,10 +34,9 @@ var ParticleEngine = function(params) {
 
         _leapUpdate();
 
-        if (!_controls.enabled) {
-            // _mouseUpdate();      // TODO_NOP: make play nice with leap
-            _controls.update();
-        }
+        _inputUpdate();
+
+        if (!_controls.enabled) _controls.update();
 
         if(_customUpdate) _customUpdate(dt, t);
 
@@ -104,8 +103,6 @@ var ParticleEngine = function(params) {
     };
 
     var _mouseUpdate = function() {
-        // _debugBox.innerHTML = "";
-
         var mIdMax = Utils.isMobile ? 4 : 1;
         for (var mId=0; mId<mIdMax; mId++) {
             var ms = _mouse.getMouse(mId);
@@ -138,26 +135,31 @@ var ParticleEngine = function(params) {
     };
 
     var _leapUpdate = function() {
-        var GRAB_PULL = 0.1;
-        var GRAB_PUSH = 1.0;
-
         _leapMan.update();
-
-        // zero all forces
-        _simMat.uniforms.uInputPosAccel.value.set(0, 0, 0, 0);
 
         for (var i=0; i<_leapMan.activeHandCount; i++) {
             var grab = _leapMan.frame.hands[i].grabStrength;
-            if (grab <= GRAB_PULL || grab >= GRAB_PUSH) {
+            if (_leapMan.frame.hands[i].grabStrength === 1.0) {
                 _simMat.uniforms.uInputPos.value[i].copy(_leapMan.palmPositions[i]);
-                _simMat.uniforms.uInputPosAccel.value.setComponent(i, grab > 0.5 ? 1.0 : -1.0);
+                _simMat.uniforms.uInputPosAccel.value.setComponent(i, 1.0);
+            }
+            else if (_leapMan.frame.hands[i].sphereRadius >= 100.0) {
+                _simMat.uniforms.uInputPos.value[i].copy(_leapMan.palmPositions[i]);
+                _simMat.uniforms.uInputPosAccel.value.setComponent(i, -1.0);
             }
         }
 
         _debugBox.innerHTML =
-            "grab1: " + (_leapMan.frame.hands[0] ? _leapMan.frame.hands[0].grabStrength : "") +
-            "grab2: " + (_leapMan.frame.hands[1] ? _leapMan.frame.hands[1].grabStrength : "") +
+            "hand1: " + (_leapMan.frame.hands[0] ? _leapMan.frame.hands[0].sphereRadius : "") + " " +
+            "hand2: " + (_leapMan.frame.hands[1] ? _leapMan.frame.hands[1].sphereRadius : "") +
             "";
+    };
+
+    var _inputUpdate = function() {
+        // reset input accels
+        _simMat.uniforms.uInputPosAccel.value.set(0,0,0,0);
+        if (!_controls.enabled) _mouseUpdate();
+        _leapUpdate();
     };
 
 
