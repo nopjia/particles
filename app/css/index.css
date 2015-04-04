@@ -30,6 +30,40 @@ body {
   line-height:100%;
 }
 
+#help-box {
+  width: 350px;
+  height: 350px;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  z-index: 1;
+
+  padding: 50px;
+  color: white;
+  background: rgba(0,0,0,0.5);
+  text-align: center;
+}
+#help-box img {
+  width: 120px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+#help-box a {
+  color: cyan;
+}
+#help-box {
+  transition: opacity 0.5s, visibility 0.5s;
+  visibility: visible;
+  opacity: 1.0;
+}
+#help-box.hidden {
+  visibility: hidden;
+  opacity: 0.0;
+}
+
 .gradient-bg-cyan-black {
   /* IE10 Consumer Preview */
   background-image: -ms-linear-gradient(top, #005C7A 0%, #000000 100%);

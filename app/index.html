@@ -3,12 +3,26 @@
 <head>
     <meta charset="utf-8">
     <meta name="description" content="An interactive particle simulation for your mind, by Nop Jiarathanakul">
-    <title>A Particle Dream - v1.0</title>
+    <title>A Particle Dream - v1.1</title>
     <link rel="stylesheet" href="css/reset.css">
     <link rel="stylesheet" href="css/index.css">
 </head>
 <body>
-    <div id="webgl-container" class="gradient-bg-cyan-black">
+    <div id="help-box" class="hidden">
+        <p>
+            push and pull particles<br>
+            <img src="images/mouse-pull.png">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <img src="images/mouse-push.png">
+            <br><br>
+            try different shapes, or take the tour<br>
+            sit back, relax, and let your imagination free
+            <br><br>
+            bonus, <a href="https://www.leapmotion.com/">Leap Motion</a> supported<br>
+            <img src="images/hand-pull.png">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <img src="images/hand-push.png">
+        </p>
+    </div>
+    <div id="webgl-container" class="gradient-bg-cyan-black" onclick="showHelpBox(false)">
         <canvas id="webgl-canvas"></canvas>
     </div>
     <div id="debug-box"></div>
@@ -48,11 +62,7 @@
 <script type="text/javascript" src="js/src/shaders/SimDebugShader.js"></script>
 <script type="text/javascript" src="js/src/shaders/UVMapShader.js"></script>
 
-<script>
-(function(){
-    var app = new App();
-})();
-</script>
+<script type="text/javascript" src="js/src/index.js"></script>
 
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
