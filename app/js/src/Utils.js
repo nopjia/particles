@@ -29,15 +29,15 @@ Utils.rgbToHex = function() {
 Utils.loadTextFile = function(url) {
     var result;
 
-    $.ajax({
-        url:      url,
-        type:     "GET",
-        async:    false,
-        dataType: "text",
-        success:  function(data) {
-            result = data;
-        }
-    });
+    var req = new XMLHttpRequest();
+    req.onerror = function() {
+        console.log("Error: request error on " + url);
+    };
+    req.onload = function() {
+        result = this.responseText;
+    };
+    req.open("GET", url, false);
+    req.send();
 
     return result;
 };

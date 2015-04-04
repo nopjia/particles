@@ -73,30 +73,6 @@ _mesh = new THREE.Mesh(
 );
 _scene.add(_mesh);
 
-_shadowMesh = [];
-for (var i=0; i<2; i++) {
-    _shadowMesh[i] = new THREE.Mesh(
-        new THREE.CircleGeometry(0.5, 16),
-        new THREE.MeshBasicMaterial({ color: 0x000000 })
-    );
-    _shadowMesh[i].position.y = -0.5;
-    _shadowMesh[i].rotation.x = -Math.PI/2.0;
-    _scene.add(_shadowMesh[i]);
-}
-
-_palmMeshes = [];
-for (var i=0; i<2; i++) {
-    var mesh = new THREE.Mesh(new THREE.TetrahedronGeometry(0.25), _redMat);
-    _palmMeshes.push(mesh);
-    _scene.add(mesh);
-}
-// _jointMeshes = [];
-// for (var i=0; i<50; i++) {
-//     var mesh = new THREE.Mesh(new THREE.CircleGeometry(0.1, 4), _redMat);
-//     _jointMeshes.push(mesh);
-//     _scene.add(mesh);
-// }
-
 // leap
 var _LEAP_SCALE = new THREE.Vector3(0.01,0.01,0.01);
 var _LEAP_POS = new THREE.Vector3(0.0, -2.0, -_camera.position.z);
@@ -104,6 +80,22 @@ var _LEAP_ROT = new THREE.Quaternion();
 _LEAP_ROT.setFromEuler(new THREE.Euler(Math.PI/6, 0.0, 0.0));  // cancel out camera tilt
 var _leapTMat = (new THREE.Matrix4()).compose(_LEAP_POS, _LEAP_ROT, _LEAP_SCALE);
 var _leapMan = new LeapManager(_renderer, _camera, _leapTMat);
+
+_shadowMesh = [];
+_palmMeshes = [];
+for (var i=0; i<_leapMan.palmPositions.length; i++) {
+    _shadowMesh[i] = new THREE.Mesh(
+        new THREE.CircleGeometry(0.5, 16),
+        new THREE.MeshBasicMaterial({ color: 0x000000 })
+    );
+    _shadowMesh[i].position.y = -0.5;
+    _shadowMesh[i].rotation.x = -Math.PI/2.0;
+    _scene.add(_shadowMesh[i]);
+
+    var mesh = new THREE.Mesh(new THREE.TetrahedronGeometry(0.25), _redMat);
+    _palmMeshes.push(mesh);
+    _scene.add(mesh);
+}
 
 // update loop
 _updateLoop = new UpdateLoop();
@@ -123,9 +115,6 @@ _updateLoop.frameCallback = function onFrameUpdate(dt,t) {
         _shadowMesh[i].visible = true;
         _palmMeshes[i].visible = true;
     }
-    // for (var i=0; i<_leapMan.jointPositions.length; i++) {
-    //     _jointMeshes[i].position.copy(_leapMan.jointPositions[i]);
-    // }
 
     _renderer.clear();
     _renderer.render(_scene, _camera);
