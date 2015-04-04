@@ -135,26 +135,27 @@ var ParticleEngine = function(params) {
     };
 
     var _leapUpdate = function() {
-        var LEAP_INPUT_IDX_OFFSET = 2;  // takes last two slots, so mouse can work at same time
+        var K_PULL = 1.0;   // in grabStrength
+        var K_PUSH = 100.0; // in sphereRadius
 
         _leapMan.update();
 
         for (var i=0; i<_leapMan.activeHandCount; i++) {
-            var inputIdx = i+LEAP_INPUT_IDX_OFFSET;
-            if (_leapMan.frame.hands[i].grabStrength === 1.0) {
+            var inputIdx = 3-i; // iterate backwards on input, so mouse can interact at same time
+            if (_leapMan.frame.hands[i].grabStrength === K_PULL) {
                 _simMat.uniforms.uInputPos.value[inputIdx].copy(_leapMan.palmPositions[i]);
                 _simMat.uniforms.uInputPosAccel.value.setComponent(inputIdx, 1.0);
             }
-            else if (_leapMan.frame.hands[i].sphereRadius >= 100.0) {
+            else if (_leapMan.frame.hands[i].sphereRadius >= K_PUSH) {
                 _simMat.uniforms.uInputPos.value[inputIdx].copy(_leapMan.palmPositions[i]);
                 _simMat.uniforms.uInputPosAccel.value.setComponent(inputIdx, -1.0);
             }
         }
 
-        _debugBox.innerHTML =
-            "hand1: " + (_leapMan.frame.hands[0] ? _leapMan.frame.hands[0].sphereRadius : "") + " " +
-            "hand2: " + (_leapMan.frame.hands[1] ? _leapMan.frame.hands[1].sphereRadius : "") +
-            "";
+        // _debugBox.innerHTML =
+        //     "hand1: " + (_leapMan.frame.hands[0] ? _leapMan.frame.hands[0].sphereRadius : "") + " " +
+        //     "hand2: " + (_leapMan.frame.hands[1] ? _leapMan.frame.hands[1].sphereRadius : "") +
+        //     "";
     };
 
     var _inputUpdate = function() {

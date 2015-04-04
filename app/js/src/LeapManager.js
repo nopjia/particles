@@ -1,8 +1,8 @@
 var LeapManager = function(renderer, camera, transform) {
     var _scene, _root, _controller;
 
-    var MAX_HANDS = 2;      // apparently leap can have more than 2 hands
-                            // more than 2 hands will draw, from plugin
+    var MAX_HANDS = 4;      // apparently leap can have more than 2 hands
+                            // more than MAX_HANDS will draw, from plugin
                             // but will not be taken into account
 
     this.renderer = renderer;
@@ -16,7 +16,7 @@ var LeapManager = function(renderer, camera, transform) {
 
     // read-only
     this.frame = undefined;
-    this.palmPositions = [new THREE.Vector3(), new THREE.Vector3()];
+    this.palmPositions = []; for (var i=0; i<MAX_HANDS; i++) this.palmPositions.push(new THREE.Vector3());
     this.activeHandCount = 0;
     // this.jointPositions = []; for (var i=0; i<50; i++) this.jointPositions.push(new THREE.Vector3());
     // this.activeJointCount = 0;
