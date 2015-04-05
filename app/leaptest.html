@@ -66,12 +66,25 @@ _controls.noPan = true;
 _controls.enabled = false;  // disable user input
 
 // mesh
-_redMat = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true });
-_mesh = new THREE.Mesh(
+
+_scene.add(new THREE.Mesh(
     new THREE.BoxGeometry(1,1,1),
-    _redMat
-);
-_scene.add(_mesh);
+    new THREE.MeshBasicMaterial({
+        color: _renderer.getClearColor().getHex(),
+        transparent: true,
+        depthTest: true,
+        depthWrite: false,
+        polygonOffset: true,
+        polygonOffsetFactor: 1.0
+    })
+));
+_scene.add(new THREE.Mesh(
+    new THREE.BoxGeometry(1,1,1),
+    new THREE.MeshBasicMaterial({
+        color: 0xff0000,
+        wireframe: true
+    })
+));
 
 // leap
 var _LEAP_SCALE = new THREE.Vector3(0.01,0.01,0.01);
@@ -81,18 +94,18 @@ _LEAP_ROT.setFromEuler(new THREE.Euler(Math.PI/6, 0.0, 0.0));  // cancel out cam
 var _leapTMat = (new THREE.Matrix4()).compose(_LEAP_POS, _LEAP_ROT, _LEAP_SCALE);
 var _leapMan = new LeapManager(_renderer, _camera, _leapTMat);
 
+// hand mesh
+_redWireMat = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true});
+_blackMat = new THREE.MeshBasicMaterial({ color: 0x000000 });
 _shadowMesh = [];
 _palmMeshes = [];
 for (var i=0; i<_leapMan.palmPositions.length; i++) {
-    _shadowMesh[i] = new THREE.Mesh(
-        new THREE.CircleGeometry(0.5, 16),
-        new THREE.MeshBasicMaterial({ color: 0x000000 })
-    );
+    _shadowMesh[i] = new THREE.Mesh(new THREE.CircleGeometry(0.5, 16), _blackMat);
     _shadowMesh[i].position.y = -0.5;
     _shadowMesh[i].rotation.x = -Math.PI/2.0;
     _scene.add(_shadowMesh[i]);
 
-    var mesh = new THREE.Mesh(new THREE.TetrahedronGeometry(0.25), _redMat);
+    var mesh = new THREE.Mesh(new THREE.TetrahedronGeometry(0.25), _redWireMat);
     _palmMeshes.push(mesh);
     _scene.add(mesh);
 }
