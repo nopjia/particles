@@ -2,7 +2,7 @@
 
 An interactive particle simulation for your mind
 
-See it [live here](http://www.iamnop.com/particles/) or as [video here](https://www.youtube.com/watch?v=YB2u2WhZjxU)
+See it [live here](http://www.iamnop.com/particles/) or as [video here](https://www.youtube.com/watch?v=i7DR_Cedbmc)
 
 Inspired by ["Particle Dreams (1988)"](http://www.karlsims.com/particle-dreams.html) by Karl Sims
 
