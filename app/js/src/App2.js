@@ -119,39 +119,43 @@ var App = function() {
     };
 
     var _tourUpdate = (function() {
-        var SHAPE_DURATION = 25.0;
-        var BETWEEN_DURATION = 15.0;
-        var BETWEEN_PRESET = "galaxy";
-        var sequence = ["wolf", "petals", "bear", "sphere", "horse", "panther", "plane", "bison"];
+        var sequence = [
+            // long intro galaxy
+            // { name:"galaxy",  duration: 41.0 },
+            // { name:"petals",  duration: 30.0 },
+            // { name:"sphere",  duration: 34.0 },
+            // { name:"none",    duration: 32.0 },
+            // { name:"wolf",    duration: 18.0 },
+            // { name:"horse",   duration: 18.0 },
+            // { name:"none",    duration: 0.0 },
+
+            // short intro galaxy
+            { name:"galaxy",  duration: 20.0 },
+            { name:"petals",  duration: 21.0 },
+            { name:"wolf",    duration: 30.0 },
+            { name:"sphere",  duration: 34.0 },
+            { name:"none",    duration: 32.0 },
+            { name:"horse",   duration: 32.0 },
+            { name:"none",    duration: 0.0 },
+        ];
         var timer = 0.0;
         var seqIdx = 0;
-        var seqName;
 
         return function(dt,t) {
             if (timer <= 0.0) {
-                // check against sequence
-                // if user navigate to different preset
-                // next tour trigger will go into shape instead of the between
-                if (_currPreset === seqName) {
-                    _setPreset(BETWEEN_PRESET);
-                    _guiFields.shape = BETWEEN_PRESET;
-                    _gui.__controllers[0].updateDisplay();  // HARDCODE: controller idx
-                    timer = BETWEEN_DURATION;
+                if (seqIdx >= sequence.length) {
+                    _tourMode = false;
+                    timer = 0.0;
+                    seqIdx = 0;
+                    return;
                 }
-                else {
-                    // sequence finished
-                    if (seqIdx >= sequence.length) {
-                        seqIdx = 0;
-                        Utils.shuffle(sequence);
-                        console.log("tour shuffled: " + sequence);
-                    }
-                    seqName = sequence[seqIdx++];
-                    _setPreset(seqName);
-                    _guiFields.shape = seqName;
-                    _gui.__controllers[0].updateDisplay();
-                    console.log("tour: "+seqName);
-                    timer = SHAPE_DURATION;
-                }
+
+                var seq = sequence[seqIdx++];
+                _setPreset(seq.name);
+                _guiFields.shape = seq.name;
+                _gui.__controllers[0].updateDisplay();
+                console.log("tour: "+seq.name+" "+seq.duration+"s");
+                timer = seq.duration;
             }
 
             timer -= dt;
@@ -187,7 +191,7 @@ var App = function() {
             "screenshot": _takeScreenshot,
             "fullscreen": Utils.toggleFullscreen,
             "take tour!": _tourMode,
-            "music": true,
+            "music": false,
         };
 
         _gui.add(_guiFields, "shape", Object.keys(_presets))
@@ -273,6 +277,10 @@ var App = function() {
             return false;
         }, "keyup");
 
+        Mousetrap.bind("p", function() {
+            _startDemo();
+        });
+
     };
 
     var _loadMeshes = function() {
@@ -304,4 +312,13 @@ var App = function() {
     _setPreset(_currPreset);
     _engine.start();
 
+    // _engine.pauseSimulation(true);
+
+    var _startDemo = function() {
+        if (_tourMode) return;
+
+        _tourMode = true;
+        _engine.pauseSimulation(false);
+        _musicElem.play();
+    };
 };
