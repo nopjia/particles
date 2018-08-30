@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test</title>
+</head>
+<body>
+</body>
+
+<script type="text/javascript" src="js/lib/three70.js"></script>
+<script type="text/javascript" src="js/lib/CopyShader.js"></script>
+<script type="text/javascript" src="js/src/Utils.js"></script>
+<script type="text/javascript" src="js/src/ShaderPass.js"></script>
+<script type="text/javascript" src="js/src/UVMapper.js"></script>
+<script type="text/javascript" src="js/src/UVMapAnimator.js"></script>
+<script type="text/javascript" src="js/src/shaders/UVMapShader.js"></script>
+
+<script type="text/javascript">
+
+var renderer = new THREE.WebGLRenderer({
+    alpha: false,
+    depth: true,
+    stencil: false,
+});
+renderer.setSize( window.innerWidth, window.innerHeight );
+renderer.autoClear = false;
+renderer.setClearColor(0x111133, 1);
+document.body.appendChild( renderer.domElement );
+
+var scene = new THREE.Scene();
+var camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 1, 10);
+camera.position.z = 5;
+
+var material = new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe: true } );
+// scene.add(new THREE.Mesh(
+//     new THREE.SphereGeometry(1),
+//     material
+// ));
+// renderer.clear();
+// renderer.render(scene, camera);
+
+var url = Utils.getParameterByName("model") || "models/wolf.json";
+
+var uvAnim = new UVMapAnimator(renderer, 512);
+var copyPass = new ShaderPass(THREE.CopyShader);
+copyPass.material.uniforms.tDiffuse.value = uvAnim.target;
+
+var _mesh;
+var _loader = new THREE.JSONLoader( true );
+_loader.load(url, function(geometry) {
+    _mesh = new THREE.MorphAnimMesh(geometry, new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true, morphTargets:true }));
+    _mesh.scale.set(0.05,0.05,0.05);
+    _mesh.position.y -= 1;
+    uvAnim.setMesh(_mesh);
+    // scene.add(_mesh);
+});
+
+var prevTime = Date.now();
+
+function update() {
+    var time = Date.now();
+
+    if (uvAnim) {
+        uvAnim.update((time-prevTime)/1000.0);
+        copyPass.render(renderer);
+    }
+    // else if (_mesh) {
+    //     _mesh.updateAnimation(time-prevTime);
+    //     _mesh.rotation.y += 0.01;
+    //     renderer.clear();
+    //     renderer.render(scene, camera);
+    // }
+
+    prevTime = time;
+
+    requestAnimationFrame(update);
+}
+
+update();
+
+</script>
+
+</html>

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Leap Test</title>
+</head>
+<style type="text/css">
+    html, body, canvas {
+        width: 100%;
+        height: 100%;
+        padding: 0;
+        margin: 0;
+        border: 0;
+        overflow: hidden;
+        color: white;
+    }
+    #debug {
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+</style>
+<body>
+<canvas id="canvas"></canvas>
+<div id="debug"></div>
+</body>
+
+<script src="js/lib/leap-0.6.4.js"></script>
+<script src="js/lib/leap-plugins-0.1.10.js"></script>
+<!-- <script src="//js.leapmotion.com/leap-0.6.4.js"></script> -->
+<!-- <script src="//js.leapmotion.com/leap-plugins-0.1.10.js"></script> -->
+<script src="js/lib/three70.js"></script>
+<script src="js/lib/OrbitControls.js"></script>
+<script src="js/lib/Clock.js"></script>
+
+<script src="js/src/UpdateLoop.js"></script>
+<script src="js/src/LeapManager.js"></script>
+
+<script type="text/javascript">
+
+// grab dom
+var _canvas = document.getElementById("canvas");
+var _debug = document.getElementById("debug");
+
+// renderer init
+var _renderer = new THREE.WebGLRenderer({
+    canvas: canvas,
+    alpha: false,
+    depth: true,
+    stencil: false,
+});
+_renderer.setSize( _canvas.clientWidth, _canvas.clientHeight );
+_renderer.autoClear = false;
+_renderer.setClearColor(0x111133, 1);
+
+// scene camera
+var _scene = new THREE.Scene();
+var _camera = new THREE.PerspectiveCamera(45, _canvas.clientWidth/_canvas.clientHeight, 1, 100);
+_camera.position.z = 8;
+
+// orbit controls
+_controls = new THREE.OrbitControls(_camera, _canvas);
+_controls.rotateUp(Math.PI/6);
+_controls.autoRotate = true;
+_controls.autoRotateSpeed = 3.0;
+_controls.noPan = true;
+_controls.enabled = false;  // disable user input
+
+// mesh
+
+_scene.add(new THREE.Mesh(
+    new THREE.BoxGeometry(1,1,1),
+    new THREE.MeshBasicMaterial({
+        color: _renderer.getClearColor().getHex(),
+        transparent: true,
+        depthTest: true,
+        depthWrite: false,
+        polygonOffset: true,
+        polygonOffsetFactor: 1.0
+    })
+));
+_scene.add(new THREE.Mesh(
+    new THREE.BoxGeometry(1,1,1),
+    new THREE.MeshBasicMaterial({
+        color: 0xff0000,
+        wireframe: true
+    })
+));
+
+// leap
+var _LEAP_SCALE = new THREE.Vector3(0.01,0.01,0.01);
+var _LEAP_POS = new THREE.Vector3(0.0, -2.0, -_camera.position.z);
+var _LEAP_ROT = new THREE.Quaternion();
+_LEAP_ROT.setFromEuler(new THREE.Euler(Math.PI/6, 0.0, 0.0));  // cancel out camera tilt
+var _leapTMat = (new THREE.Matrix4()).compose(_LEAP_POS, _LEAP_ROT, _LEAP_SCALE);
+var _leapMan = new LeapManager(_renderer, _camera, _leapTMat);
+
+// hand mesh
+_redWireMat = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true});
+_blackMat = new THREE.MeshBasicMaterial({ color: 0x000000 });
+_shadowMesh = [];
+_palmMeshes = [];
+for (var i=0; i<_leapMan.palmPositions.length; i++) {
+    _shadowMesh[i] = new THREE.Mesh(new THREE.CircleGeometry(0.5, 16), _blackMat);
+    _shadowMesh[i].position.y = -0.5;
+    _shadowMesh[i].rotation.x = -Math.PI/2.0;
+    _scene.add(_shadowMesh[i]);
+
+    var mesh = new THREE.Mesh(new THREE.TetrahedronGeometry(0.25), _redWireMat);
+    _palmMeshes.push(mesh);
+    _scene.add(mesh);
+}
+
+// update loop
+_updateLoop = new UpdateLoop();
+_updateLoop.fixedCallback = function onFixedUpdate(dt,t) {};
+_updateLoop.frameCallback = function onFrameUpdate(dt,t) {
+    _controls.update();
+    _leapMan.update();
+
+    for (var i=0; i<_leapMan.palmPositions.length; i++) {
+        _shadowMesh[i].visible = false;
+        _palmMeshes[i].visible = false;
+    }
+    for (var i=0; i<_leapMan.activeHandCount; i++) {
+        _shadowMesh[i].position.x = _leapMan.palmPositions[i].x;
+        _shadowMesh[i].position.z = _leapMan.palmPositions[i].z;
+        _palmMeshes[i].position.copy(_leapMan.palmPositions[i]);
+        _shadowMesh[i].visible = true;
+        _palmMeshes[i].visible = true;
+    }
+
+    _renderer.clear();
+    _renderer.render(_scene, _camera);
+
+    _leapMan.render();
+};
+
+_updateLoop.start();
+
+</script>
+
+</html>
